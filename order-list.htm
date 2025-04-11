@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order List - Sidedish Foods</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #fffaf7; /* Light cream background for a warm feel */
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .header {
+            background-color: #4a2c2a; /* Dark brown header */
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header img {
+            max-width: 150px;
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: scale(1.05); /* Slight scale on hover for logo */
+        }
+        .header nav {
+            margin-top: 15px;
+        }
+        .header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .header nav a:hover {
+            color: #f5c6aa; /* Light peach on hover */
+            transform: translateY(-2px);
+            display: inline-block;
+        }
+        .section {
+            padding: 40px 20px;
+        }
+        .order-list-section {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .order-list-section h2 {
+            font-family: 'Playfair Display', serif;
+            color: #4a2c2a;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+        .order-card {
+            background-color: #fffaf7;
+            border: 1px solid #f5c6aa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .order-card h4 {
+            margin: 0 0 15px;
+            font-family: 'Playfair Display', serif;
+            color: #4a2c2a;
+            font-size: 22px;
+        }
+        .order-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .order-card .delete-btn, .order-card .confirm-btn {
+            position: absolute;
+            top: 20px;
+            padding: 6px 12px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .order-card .delete-btn {
+            right: 20px;
+            background-color: #e74c3c;
+        }
+        .order-card .delete-btn:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        .order-card .confirm-btn {
+            right: 80px;
+        }
+        .order-card .confirm-btn.mark {
+            background-color: #2ecc71;
+        }
+        .order-card .confirm-btn.mark:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+        .order-card .confirm-btn.unmark {
+            background-color: #e74c3c;
+        }
+        .order-card .confirm-btn.unmark:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        .login-section {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .login-section h2 {
+            font-family: 'Playfair Display', serif;
+            color: #4a2c2a;
+            margin-bottom: 20px;
+        }
+        .login-section input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .login-section input:focus {
+            border-color: #4a2c2a;
+            box-shadow: 0 0 5px rgba(74, 44, 42, 0.2);
+            outline: none;
+        }
+        .login-section .btn {
+            background-color: #4a2c2a;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .login-section .btn:hover {
+            background-color: #3a1c1a;
+            transform: scale(1.05);
+        }
+        .login-section .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .search-section, .filter-section, .sort-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .search-section input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .search-section input:focus {
+            border-color: #4a2c2a;
+            box-shadow: 0 0 5px rgba(74, 44, 42, 0.2);
+            outline: none;
+        }
+        .filter-section, .sort-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .filter-section:hover, .sort-section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        .filter-section label, .sort-section label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #4a2c2a;
+        }
+        .filter-section select, .sort-section select, .filter-section input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            background-color: white;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .filter-section select:focus, .sort-section select:focus, .filter-section input:focus {
+            border-color: #4a2c2a;
+            box-shadow: 0 0 5px rgba(74, 44, 42, 0.2);
+            outline: none;
+        }
+        .filter-section input[type="date"] {
+            max-width: 150px;
+        }
+        .filter-section button, .sort-section button {
+            padding: 8px 15px;
+            background-color: #4a2c2a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .filter-section button:hover, .sort-section button:hover {
+            background-color: #3a1c1a;
+            transform: scale(1.05);
+        }
+        .footer {
+            background-color: #4a2c2a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer a {
+            color: #f5c6aa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .header nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            .order-list-section {
+                padding: 20px;
+            }
+            .order-card {
+                padding: 15px;
+            }
+            .order-card .delete-btn, .order-card .confirm-btn {
+                position: static;
+                display: inline-block;
+                margin: 5px;
+            }
+            .filter-section, .sort-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .filter-section input[type="date"], .filter-section select, .sort-section select {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
+        <nav>
+            <a href="index.htm">Home</a>
+            <a href="menu.htm">Menu</a>
+            <a href="about.htm">About</a>
+            <a href="contact.htm">Contact</a>
+            <a href="order-list.htm">The Order List</a>
+        </nav>
+    </div>
+    <div class="section login-section" id="login-section">
+        <h2>Login to View Orders</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="passcode" placeholder="Passcode" required>
+        <button class="btn" onclick="login()">Login</button>
+        <p class="error-message" id="login-error" style="display: none;">Invalid email or passcode.</p>
+    </div>
+    <div class="section order-list-section" id="order-list-section" style="display: none;">
+        <h2>Your Orders</h2>
+        <div class="search-section">
+            <input type="text" id="search-input" placeholder="Search by ID, address, state, payment method, delivery option, or items">
+        </div>
+        <div class="filter-section">
+            <label>Filter by Payment Status:</label>
+            <select id="payment-filter" onchange="fetchOrders()">
+                <option value="all">All</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="not-confirmed">Not Confirmed</option>
+            </select>
+            <label>Filter by Date Range:</label>
+            <input type="date" id="start-date" onchange="fetchOrders()">
+            <input type="date" id="end-date" onchange="fetchOrders()">
+            <button onclick="resetFilters()">Reset Filters</button>
+        </div>
+        <div class="sort-section">
+            <label>Sort by:</label>
+            <select id="sort-option" onchange="fetchOrders()">
+                <option value="date-desc">Date (Newest First)</option>
+                <option value="date-asc">Date (Oldest First)</option>
+                <option value="total-desc">Total (High to Low)</option>
+                <option value="total-asc">Total (Low to High)</option>
+            </select>
+        </div>
+        <div id="order-list"></div>
+    </div>
+    <div class="footer">
+        <p>Address: 479 Shehu Kazaura Rd, Hotoro, Kano</p>
+        <p>Contact: 07019631217, 08054915919</p>
+        <p>Instagram: <a href="https://instagram.com/sidedish_foods" target="_blank">@sidedish_foods</a></p>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Define the base URL based on the environment
+        const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-foods.onrender.com';
+
+        // Hardcoded credentials (for demonstration purposes)
+        const VALID_EMAIL = "ayshaahmad360@gmail.com";
+        const VALID_PASSCODE = "dishesatheside_staff";
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const passcode = document.getElementById('passcode').value;
+            const loginError = document.getElementById('login-error');
+
+            if (email === VALID_EMAIL && passcode === VALID_PASSCODE) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('order-list-section').style.display = 'block';
+                fetchOrders();
+            } else {
+                loginError.style.display = 'block';
+            }
+        }
+
+        // Debounce setup
+        let searchTimeout;
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('keyup', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(fetchOrders, 300);
+        });
+
+        // Function to escape special characters in search term
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Function to highlight matching text
+        function highlightMatch(text, term) {
+            if (!term || !text) return text;
+            const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+            return text.replace(regex, '<strong>$1</strong>');
+        }
+
+        // Reset filters function
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('payment-filter').value = 'all';
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('sort-option').value = 'date-desc';
+            fetchOrders();
+        }
+
+        // Function to delete an order
+        async function deleteOrder(orderId) {
+            if (!confirm(`Are you sure you want to delete Order #${orderId}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    fetchOrders(); // Refresh the order list
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error deleting order, status:', response.status, 'Response:', errorText);
+                    alert('Failed to delete order: ' + (errorText || 'Unknown error. Please try again.'));
+                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                alert('An error occurred while deleting the order: ' + error.message + '. Please try again.');
+            }
+        }
+
+        // Function to toggle payment confirmed status
+        async function togglePaymentConfirmed(orderId, currentStatus) {
+            try {
+                const newStatus = !currentStatus; // Toggle the status
+                const response = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ payment_confirmed: newStatus })
+                });
+
+                if (response.ok) {
+                    fetchOrders(); // Refresh the order list
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error updating payment status, status:', response.status, 'Response:', errorText);
+                    alert('Failed to update payment status: ' + (errorText || 'Unknown error. Please try again.'));
+                }
+            } catch (error) {
+                console.error('Error updating payment status:', error);
+                alert('An error occurred while updating the payment status: ' + error.message + '. Please try again.');
+            }
+        }
+
+        async function fetchOrders() {
+            try {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const paymentFilter = document.getElementById('payment-filter').value;
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                const sortOption = document.getElementById('sort-option').value;
+
+                const response = await fetch(`${BASE_URL}/api/orders?search=${searchTerm}&payment=${paymentFilter}&startDate=${startDate}&endDate=${endDate}&sort=${sortOption}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    let orders = await response.json();
+                    const orderList = document.getElementById('order-list');
+                    orderList.innerHTML = ''; // Clear existing orders
+
+                    // 1. Filter by search term
+                    if (searchTerm) {
+                        orders = orders.filter(order => 
+                            (order.id && order.id.toString().toLowerCase().includes(searchTerm)) ||
+                            (order.address && order.address.toLowerCase().includes(searchTerm)) ||
+                            (order.state && order.state.toLowerCase().includes(searchTerm)) ||
+                            (order.payment_method && order.payment_method.toLowerCase().includes(searchTerm)) ||
+                            (order.delivery_option && order.delivery_option.toLowerCase().includes(searchTerm)) ||
+                            (order.items && order.items.some(item => item.name.toLowerCase().includes(searchTerm)))
+                        );
+                    }
+
+                    // 2. Filter by payment status
+                    if (paymentFilter !== 'all') {
+                        orders = orders.filter(order => 
+                            paymentFilter === 'confirmed' ? order.payment_confirmed : !order.payment_confirmed
+                        );
+                    }
+
+                    // 3. Filter by date range
+                    if (startDate || endDate) {
+                        orders = orders.filter(order => {
+                            const orderDate = new Date(order.created_at);
+                            const start = startDate ? new Date(startDate) : null;
+                            const end = endDate ? new Date(endDate) : null;
+
+                            if (start && end) {
+                                return orderDate >= start && orderDate <= end;
+                            } else if (start) {
+                                return orderDate >= start;
+                            } else if (end) {
+                                return orderDate <= end;
+                            }
+                            return true;
+                        });
+                    }
+
+                    // 4. Sort orders
+                    if (sortOption === 'date-desc') {
+                        orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    } else if (sortOption === 'date-asc') {
+                        orders.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                    } else if (sortOption === 'total-desc') {
+                        orders.sort((a, b) => b.total - a.total);
+                    } else if (sortOption === 'total-asc') {
+                        orders.sort((a, b) => a.total - b.total);
+                    }
+
+                    // Display filtered and sorted orders
+                    if (orders.length === 0) {
+                        orderList.innerHTML = '<p>No orders found.</p>';
+                    } else {
+                        orders.forEach(order => {
+                            // Highlight matching items
+                            const highlightedItems = order.items.map(item => ({
+                                ...item,
+                                name: highlightMatch(item.name, searchTerm)
+                            })).map(item => item.name).join(', ');
+
+                            const orderCard = document.createElement('div');
+                            orderCard.className = 'order-card';
+                            orderCard.innerHTML = `
+                                <h4>Order #${highlightMatch(order.id.toString(), searchTerm)}</h4>
+                                <button class="delete-btn" onclick="deleteOrder(${order.id})">Delete</button>
+                                <button class="confirm-btn ${order.payment_confirmed ? 'unmark' : 'mark'}" onclick="togglePaymentConfirmed(${order.id}, ${order.payment_confirmed})">
+                                    ${order.payment_confirmed ? 'Unmark as Confirmed' : 'Mark as Confirmed'}
+                                </button>
+                                <p><strong>Items:</strong> ${highlightedItems}</p>
+                                <p><strong>Total:</strong> ${order.total} NGN</p>
+                                <p><strong>Address:</strong> ${highlightMatch(order.address, searchTerm)}, ${highlightMatch(order.state, searchTerm)}</p>
+                                <p><strong>Delivery Option:</strong> ${highlightMatch(order.delivery_option, searchTerm)}</p>
+                                <p><strong>Payment Method:</strong> ${highlightMatch(order.payment_method, searchTerm)}</p>
+                                <p><strong>Payment Confirmed:</strong> ${order.payment_confirmed ? 'Yes' : 'No'}</p>
+                                <p><strong>Order Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+                            `;
+                            orderList.appendChild(orderCard);
+                        });
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error fetching orders, status:', response.status, 'Response:', errorText);
+                    alert('Failed to fetch orders: ' + (response.statusText || 'Unknown error. Please try again.'));
+                }
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                console.error('Error details:', error.message, error.stack);
+                alert('An error occurred while fetching orders: ' + error.message + '. Please check your internet connection and try again.');
+            }
+        }
+    </script>
+</body>
+</html>

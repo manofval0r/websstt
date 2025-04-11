@@ -1,0 +1,270 @@
+// server.js
+const express = require('express');
+const twilio = require('twilio');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
+
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON requests
+app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('MongoDB connection error:', err);
+});
+
+// Define the Order schema
+const orderSchema = new mongoose.Schema({
+    items: [{ name: String, price: Number }],
+    total: Number,
+    address: String,
+    state: String,
+    deliveryOption: String,
+    paymentMethod: String,
+    paymentConfirmed: { type: Boolean, default: false }, // New field
+    createdAt: { type: Date, default: Date.now }
+});
+
+const Order = mongoose.model('Order', orderSchema);
+
+// Define the Password schema (for the shared staff password)
+const passwordSchema = new mongoose.Schema({
+    password: String, // Hashed password
+    isFirstLogin: { type: Boolean, default: true } // Flag to force password change on first login
+});
+
+const Password = mongoose.model('Password', passwordSchema);
+
+// Initialize the default password if it doesn't exist
+async function initializePassword() {
+    const existingPassword = await Password.findOne();
+    if (!existingPassword) {
+        const hashedPassword = await bcrypt.hash('sidedish2025', 10); // Default password
+        await new Password({ password: hashedPassword }).save();
+        console.log('Default password initialized');
+    }
+}
+
+initializePassword();
+
+// Twilio credentials for WhatsApp notifications
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = new twilio(accountSid, authToken);
+
+// CEO's WhatsApp number
+const ceoWhatsAppNumber = process.env.CEO_WHATSAPP_NUMBER;
+
+// Middleware to authenticate staff
+const authenticateStaff = async (req, res, next) => {
+    const { password } = req.body;
+    if (!password) {
+        return res.status(401).json({ success: false, message: 'Password required' });
+    }
+
+    const storedPassword = await Password.findOne();
+    if (!storedPassword) {
+        return res.status(500).json({ success: false, message: 'Password not initialized' });
+    }
+
+    const isMatch = await bcrypt.compare(password, storedPassword.password);
+    if (isMatch) {
+        req.isFirstLogin = storedPassword.isFirstLogin;
+        next();
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+};
+
+// Middleware to authenticate higher-clearance staff (e.g., CEO)
+const authenticateHigherClearance = (req, res, next) => {
+    const { passkey } = req.body;
+    const validPasskey = 'ceo-access-2025'; // Hardcoded for simplicity
+    if (passkey === validPasskey) {
+        next();
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid passkey' });
+    }
+};
+
+// Endpoint to handle order placement
+app.post('/place-order', async (req, res) => {
+    const { cart, total, address, city, deliveryOption, paymentMethod } = req.body;
+
+    // Save the order to the database
+    const order = new Order({
+        items: cart,
+        total: total,
+        address: address,
+        state: city,
+        deliveryOption: deliveryOption,
+        paymentMethod: paymentMethod
+    });
+
+    try {
+        await order.save();
+        console.log('Order saved to database:', order);
+
+        // Format the order details for the WhatsApp message
+        const orderItems = cart.map(item => `${item.name}: ${item.price} NGN`).join('\n');
+        const messageBody = `
+New Order Placed!
+Items:
+${orderItems}
+Total: ${total} NGN
+Delivery Address: ${address}, ${city}
+Delivery Option: ${deliveryOption}
+Payment Method: ${paymentMethod}
+        `;
+
+        // Send WhatsApp message to the CEO
+        await twilioClient.messages.create({
+            body: messageBody,
+            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+            to: `whatsapp:${ceoWhatsAppNumber}`
+        });
+
+        console.log('WhatsApp message sent to CEO');
+        res.status(200).json({ success: true, message: 'Order placed successfully!' });
+    } catch (error) {
+        console.error('Error processing order:', error);
+        res.status(500).json({ success: false, message: 'Failed to place order.' });
+    }
+});
+
+// Endpoint to authenticate staff and check if it's the first login
+app.post('/staff-login', async (req, res) => {
+    const { password } = req.body;
+    if (!password) {
+        return res.status(401).json({ success: false, message: 'Password required' });
+    }
+
+    const storedPassword = await Password.findOne();
+    if (!storedPassword) {
+        return res.status(500).json({ success: false, message: 'Password not initialized' });
+    }
+
+    const isMatch = await bcrypt.compare(password, storedPassword.password);
+    if (isMatch) {
+        res.status(200).json({ success: true, isFirstLogin: storedPassword.isFirstLogin });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+});
+
+// Endpoint to change the staff password
+app.post('/change-password', authenticateStaff, async (req, res) => {
+    const { newPassword } = req.body;
+    if (!newPassword) {
+        return res.status(400).json({ success: false, message: 'New password required' });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await Password.updateOne({}, { password: hashedPassword, isFirstLogin: false });
+        res.status(200).json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({ success: false, message: 'Failed to update password' });
+    }
+});
+
+// Endpoint to fetch all orders (protected by staff authentication)
+app.post('/orders', authenticateStaff, async (req, res) => {
+    try {
+        const orders = await Order.find().sort({ createdAt: -1 }); // Sort by newest first
+        res.status(200).json({ success: true, orders });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch orders.' });
+    }
+});
+
+// Endpoint to confirm payment for an order (protected by staff authentication)
+app.post('/confirm-payment/:id', authenticateStaff, async (req, res) => {
+    try {
+        const order = await Order.findByIdAndUpdate(req.params.id, { paymentConfirmed: true }, { new: true });
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        res.status(200).json({ success: true, message: 'Payment confirmed' });
+    } catch (error) {
+        console.error('Error confirming payment:', error);
+        res.status(500).json({ success: false, message: 'Failed to confirm payment' });
+    }
+});
+
+// Endpoint for analytics (protected by higher-clearance passkey)
+app.post('/analytics', authenticateHigherClearance, async (req, res) => {
+    try {
+        const orders = await Order.find();
+
+        // Total amount of food ordered
+        const totalFoodOrdered = orders.reduce((sum, order) => sum + order.total, 0);
+
+        // Website audience reach (orders per state)
+        const audienceReach = {};
+        orders.forEach(order => {
+            audienceReach[order.state] = (audienceReach[order.state] || 0) + 1;
+        });
+
+        // Number of successful transactions (payment confirmed)
+        const successfulTransactions = orders.filter(order => order.paymentConfirmed).length;
+
+        res.status(200).json({
+            success: true,
+            analytics: {
+                totalFoodOrdered,
+                audienceReach,
+                successfulTransactions
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching analytics:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
+    }
+});
+
+// Endpoint to change the staff password (protected by higher-clearance passkey)
+app.post('/analytics/change-password', authenticateHigherClearance, async (req, res) => {
+    const { newPassword } = req.body;
+    if (!newPassword) {
+        return res.status(400).json({ success: false, message: 'New password required' });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await Password.updateOne({}, { password: hashedPassword, isFirstLogin: false });
+        res.status(200).json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({ success: false, message: 'Failed to update password' });
+    }
+});
+
+function openTab(tabName, event) {
+    var tabs = document.getElementsByClassName('tab');
+    var sections = document.getElementsByClassName('menu-section');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+        sections[i].classList.remove('active');
+    }
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});

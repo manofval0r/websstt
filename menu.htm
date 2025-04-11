@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Sidedish Foods</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #462822;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .tabs button {
+            background-color: #4a2c2a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .tabs button.active {
+            background-color: #2e7d32;
+        }
+        .tabs button:hover {
+            background-color: #2e7d32;
+        }
+        .menu-section {
+            display: none;
+        }
+        .menu-section.active {
+            display: block;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .menu-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .menu-item .details {
+            flex: 1;
+        }
+        .menu-item .details h3 {
+            font-family: 'Playfair Display', serif;
+            color: #4a2c2a;
+        }
+        .cart {
+            position: fixed;
+            top: 91.5px;
+            right: 20px;
+            background-color: #f5f0e1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
+        <nav>
+            <a href="index.htm">Home</a>
+            <a href="menu.htm">Menu</a>
+            <a href="about.htm">About</a>
+            <a href="contact.htm">Contact</a>
+            <a href="order-list.htm">The Order List</a>
+            <a href="admin-dashboard.htm">Admin Dashboard</a>
+        </nav>
+    </div>
+    <div class="tabs">
+        <button class="tab active" onclick="openTab('food')">Food</button>
+        <button class="tab" onclick="openTab('drinks')">Drinks</button>
+        <button class="tab" onclick="openTab('snacks')">Snacks</button>
+    </div>
+    <div class="section">
+        <div id="food" class="menu-section active">
+            <div class="card menu-item">
+                <img src="assets/fried-rice.jpg" alt="Fried Rice">
+                <div class="details">
+                    <h3>Fried Rice</h3>
+                    <p>4,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Fried Rice', 4000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Jollof Rice</h3>
+                    <p>3,500 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Jollof Rice', 3500)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>White Rice and Stew</h3>
+                    <p>3,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('White Rice and Stew', 3000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Tai Rice</h3>
+                    <p>4,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Tai Rice', 4000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Birhyani</h3>
+                    <p>3,500 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Birhyani', 3500)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <img src="assets/beef-on-stick.jpg" alt="Beef-on-Stick">
+                <div class="details">
+                    <h3>Beef-on-Stick</h3>
+                    <p>3,500 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Beef-on-Stick', 3500)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Sina Sir</h3>
+                    <p>3,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Sina Sir', 3000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Marinated Whole Chicken</h3>
+                    <p>8,500 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Marinated Whole Chicken', 8500)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Marinated Local Chicken</h3>
+                    <p>8,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Marinated Local Chicken', 8000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Marinated Chicken Wings</h3>
+                    <p>7,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Marinated Chicken Wings', 7000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Marinated Drumsticks</h3>
+                    <p>7,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Marinated Drumsticks', 7000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Marinated Thighs</h3>
+                    <p>7,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Marinated Thighs', 7000)">Add to Cart</button>
+            </div>
+        </div>
+        <div id="drinks" class="menu-section">
+            <div class="card menu-item">
+                <img src="assets/zobo.jpg" alt="Zobo">
+                <div class="details">
+                    <h3>Zobo</h3>
+                    <p>300 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Zobo', 300)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Kunu Aya</h3>
+                    <p>300 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Kunu Aya', 300)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Tiger Nut Drink</h3>
+                    <p>300 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Tiger Nut Drink', 300)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Tamarind Drink</h3>
+                    <p>300 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Tamarind Drink', 300)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Mocktails</h3>
+                    <p>300 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Mocktails', 300)">Add to Cart</button>
+            </div>
+        </div>
+        <div id="snacks" class="menu-section">
+            <div class="card menu-item">
+                <img src="assets/samosa.jpg" alt="Samosa">
+                <div class="details">
+                    <h3>Samosa (10 pieces)</h3>
+                    <p>2,200 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Samosa (10 pieces)', 2200)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Spring Rolls (10 pieces)</h3>
+                    <p>2,200 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Spring Rolls (10 pieces)', 2200)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Meat Pie (10 pieces)</h3>
+                    <p>3,000 NGN</p>
+                </div>
+                <button class="btn" onclick="addToCart('Meat Pie (10 pieces)', 3000)">Add to Cart</button>
+            </div>
+            <div class="card menu-item">
+                <div class="details">
+                    <h3>Cupcake (50 pieces)</h3>
+                    <p>15,000 NGN</p>
+                    <p style="font-size: 12px; color: #666;">*Only for orders outside Kano or in-restaurant pickup</p>
+                </div>
+                <button class="btn" onclick="addToCart('Cupcake (50 pieces)', 15000)">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <p>Food Total: <span id="cart-total">0</span> NGN</p>
+        <p>Delivery Fee: <span id="delivery-fee">Select delivery location at checkout</span></p>
+        <button class="btn" onclick="window.location.href='checkout.htm'">Checkout</button>
+        <p style="font-size: 12px; color: #666;">*Orders under 10,000 NGN are only available for delivery in Kano.</p>
+    </div>
+    <div class="footer">
+        <p>Address: 479 Shehu Kazaura Rd, Hotoro, Kano</p>
+        <p>Contact: 07019631217, 08054915919</p>
+        <p>Instagram: <a href="https://instagram.com/sidedish_foods" target="_blank">@sidedish_foods</a></p>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function openTab(tabName) {
+            var tabs = document.getElementsByClassName('tab');
+            var sections = document.getElementsByClassName('menu-section');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+                sections[i].classList.remove('active');
+            }
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        window.onload = updateCart;
+    </script>
+</body>
+</html>
