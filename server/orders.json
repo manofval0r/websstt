@@ -50,5 +50,25 @@
     "payment_confirmed": false,
     "id": 3,
     "created_at": "2025-04-11T22:49:42.960Z"
+  },
+  {
+    "items": [
+      {
+        "name": "Jollof Rice",
+        "price": 3500
+      },
+      {
+        "name": "Jollof Rice",
+        "price": 3500
+      }
+    ],
+    "total": 7000,
+    "address": "ttyuil",
+    "state": "Kano",
+    "delivery_option": "delivery",
+    "payment_method": "cash-on-delivery",
+    "payment_confirmed": false,
+    "id": 4,
+    "created_at": "2025-04-12T10:05:25.052Z"
   }
 ]
