@@ -132,6 +132,8 @@
     </div>
     <script src="script.js"></script>
     <script>
+        const BASE_URL = 'https://sidedish-backend.onrender.com';
+
         window.onload = function() {
             updateCheckoutSummary();
             updateDeliveryFee();
@@ -250,7 +252,7 @@
             console.log('Order Data:', orderData);
 
             try {
-                const response = await fetch('http://localhost:3000/api/orders', {
+                const response = await fetch(`${BASE_URL}/api/orders`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
