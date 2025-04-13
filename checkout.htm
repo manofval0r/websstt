@@ -137,6 +137,10 @@
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const total = parseFloat(localStorage.getItem('total')) || 0;
 
+        const allowedOrigins = ['https://sidedishfoodsweb.vercel.app', 'http://localhost:3000'];
+        app.use(cors({
+            origin: allowedOrigins
+        }));
 
         window.onload = function() {
             updateCheckoutSummary();
