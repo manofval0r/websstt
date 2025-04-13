@@ -132,17 +132,40 @@
     </div>
     <script src="script.js"></script>
     <script>
-        const BASE_URL = 'https://sidedish-backend.onrender.com';
+        const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
 
-        const allowedOrigins = ['https://your-frontend.vercel.app', 'http://localhost:3000'];
-        app.use(cors({
-            origin: allowedOrigins
-        }));
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const total = parseFloat(localStorage.getItem('total')) || 0;
+
 
         window.onload = function() {
             updateCheckoutSummary();
             updateDeliveryFee();
         };
+
+        function updateCheckoutSummary() {
+            const orderItemsContainer = document.getElementById('order-items');
+            const orderTotalElement = document.getElementById('order-total');
+
+        if (!cart.length) {
+            orderItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            orderTotalElement.textContent = '0';
+            return;
+        }
+
+        let html = '';
+        cart.forEach(item => {
+            html += `<p>${item.name} - ${item.price} NGN</p>`;
+        });
+
+        orderItemsContainer.innerHTML = html;
+        orderTotalElement.textContent = total.toLocaleString(); // comma-separated format
+    }
+        
+        window.placeOrder = async function () {
+  // your placeOrder code...
+  }
+
 
         function updateDeliveryFee() {
             const city = document.getElementById('city').value;
@@ -255,6 +278,7 @@
 
             // Log the order data for debugging
             console.log('Order Data:', orderData);
+            console.log('Response Status:', response.status);
 
             try {
                 const response = await fetch(`${BASE_URL}/api/orders`, {

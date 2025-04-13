@@ -5,10 +5,14 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASE_URL = 'https://your-backend.onrender.com';
+const BASE_URL = 'https://sidedish-backend.onrender.com';
 
-// Middleware
-app.use(cors());
+// Allow requests from your Vercel frontend
+const allowedOrigins = ['https://sidedishfoodsweb.vercel.app', 'http://localhost:3000'];
+app.use(cors({
+    origin: allowedOrigins
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 
