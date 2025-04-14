@@ -173,7 +173,7 @@
 
             let html = '';
             cart.forEach(item => {
-                html += <p>${item.name} - ${item.price.toLocaleString('en-NG')} NGN</p>;
+                html += `<p>${item.name} - ${item.price.toLocaleString('en-NG')} NGN</p>`;
             });
 
             orderItemsContainer.innerHTML = html;
