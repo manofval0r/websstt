@@ -2,7 +2,6 @@ const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:30
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let total = parseFloat(localStorage.getItem('total')) || 0;
-let deliveryFee = 0; // Declare and initialize deliveryFee at the top
 
 function addToCart(name, price) {
     cart.push({ name, price });
@@ -74,89 +73,24 @@ function showPaymentDetails(paymentMethod) {
     console.log(`Payment method selected: ${paymentMethod}`);
 }
 
-window.submitOrder = async function () {
-    console.log('Place Order button clicked');
+async function submitOrder() {
+    console.log('Placing order...');
+    console.log('Cart:', cart);
+    console.log('Total:', total);
+
+    const orderData = {
+        items: cart,
+        total: total,
+        address: document.getElementById('address').value.trim(),
+        state: document.getElementById('city').value,
+        delivery_option: document.querySelector('input[name="delivery-option"]:checked').value,
+        payment_method: document.querySelector('input[name="payment"]:checked')?.value,
+        payment_confirmed: false
+    };
+
+    console.log('Order Data:', orderData);
+
     try {
-        // Reset error messages
-        document.getElementById('cart-error').style.display = 'none';
-        document.getElementById('address-error').style.display = 'none';
-        document.getElementById('city-error').style.display = 'none';
-        document.getElementById('payment-error').style.display = 'none';
-
-        // Get form values
-        const city = document.getElementById('city').value;
-        const address = document.getElementById('address').value.trim();
-        const deliveryOption = document.querySelector('input[name="delivery-option"]:checked').value;
-        const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
-
-        // Validation checks
-        let hasError = false;
-
-        if (cart.length === 0) {
-            document.getElementById('cart-error').style.display = 'block';
-            hasError = true;
-        }
-
-        if (!address) {
-            document.getElementById('address-error').style.display = 'block';
-            hasError = true;
-        }
-
-        if (!city) {
-            document.getElementById('city-error').style.display = 'block';
-            hasError = true;
-        }
-
-        if (!paymentMethod) {
-            document.getElementById('payment-error').style.display = 'block';
-            hasError = true;
-        }
-
-        if (total < 10000 && city !== 'Kano' && deliveryOption !== 'pickup') {
-            alert('Orders under 10,000 NGN are only available for delivery in Kano.');
-            hasError = true;
-        }
-
-        if (deliveryOption === 'pickup' && paymentMethod !== 'card-payment' && paymentMethod !== 'bank-transfer') {
-            alert('For in-restaurant pickup, please select Card Payment or Bank Transfer.');
-            hasError = true;
-        }
-
-        if (city === 'Kano' && deliveryOption !== 'pickup' && paymentMethod !== 'cash-on-delivery' && paymentMethod !== 'bank-transfer') {
-            alert('For Kano deliveries, please select Cash on Delivery or Bank Transfer.');
-            hasError = true;
-        }
-
-        if (city !== 'Kano' && deliveryOption !== 'pickup' && paymentMethod !== 'bank-transfer') {
-            alert('For deliveries outside Kano, please select Bank Transfer.');
-            hasError = true;
-        }
-
-        if (hasError) return;
-
-        // Calculate total including delivery fee
-        let finalTotal = total;
-        if (deliveryOption !== 'pickup' && total >= 10000 && city !== 'Kano') {
-            // Delivery fee varies by state, not included in total
-        } else if (deliveryOption !== 'pickup' && city === 'Kano') {
-            deliveryFee = 2400;
-            finalTotal += deliveryFee;
-        }
-
-        // Prepare order data
-        const orderData = {
-            items: cart,
-            total: finalTotal,
-            address: address,
-            state: city,
-            delivery_option: deliveryOption,
-            payment_method: paymentMethod,
-            payment_confirmed: false,
-            delivery_fee: deliveryFee
-        };
-
-        console.log('Order Data:', orderData);
-
         const response = await fetch(`${BASE_URL}/api/orders`, {
             method: 'POST',
             headers: {
@@ -165,28 +99,30 @@ window.submitOrder = async function () {
             body: JSON.stringify(orderData)
         });
 
+        console.log('Response Status:', response.status);
         if (response.ok) {
-            alert('Order placed successfully! You can view your order in the dashboard.');
-            // Clear localStorage first
+            const responseData = await response.json();
+            console.log('Order placed successfully!', responseData);
+            alert('Order placed successfully!');
             localStorage.removeItem('cart');
             localStorage.removeItem('total');
-            // Then reset global variables
             cart = [];
             total = 0;
-            deliveryFee = 0;
             window.location.href = '/index.htm';
         } else {
             const error = await response.json();
-            alert('Failed to place order: ' + (error.message || 'Unknown error. Please try again.'));
+            console.error('Error Response:', error);
+            alert('Failed to place order: ' + (error.message || 'Unknown error.'));
         }
     } catch (error) {
-        console.error('Error in submitOrder:', error);
-        alert('An error occurred while placing the order: ' + error.message + '. Please check your internet connection and try again.');
+        console.error('Network Error:', error.message);
+        alert('An error occurred: ' + error.message);
     }
-};
+}
 
 window.updateDeliveryFee = updateDeliveryFee;
 window.showPaymentDetails = showPaymentDetails;
+window.submitOrder = submitOrder;
 
 window.addEventListener('load', function() {
     updateCartSummary();
