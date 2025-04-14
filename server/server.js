@@ -120,6 +120,48 @@ app.patch('/api/orders/:id', async (req, res) => {
     }
 });
 
+async function placeOrder() {
+    console.log('Placing order...');
+    console.log('Cart:', cart);
+    console.log('Total:', total);
+
+    const orderData = {
+        items: cart,
+        total: total,
+        address: document.getElementById('address').value.trim(),
+        state: document.getElementById('city').value,
+        delivery_option: document.querySelector('input[name="delivery-option"]:checked').value,
+        payment_method: document.querySelector('input[name="payment"]:checked')?.value,
+        payment_confirmed: false
+    };
+
+    console.log('Order Data:', orderData);
+
+    try {
+        const response = await fetch(`${BASE_URL}/api/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        console.log('Response Status:', response.status);
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Order placed successfully!', responseData);
+            alert('Order placed successfully!');
+        } else {
+            const error = await response.json();
+            console.error('Error Response:', error);
+            alert('Failed to place order: ' + (error.message || 'Unknown error.'));
+        }
+    } catch (error) {
+        console.error('Network Error:', error.message);
+        alert('An error occurred: ' + error.message);
+    }
+}
+
 // Start the server
 app.listen(PORT, async () => {
     await initializeOrdersFile();
