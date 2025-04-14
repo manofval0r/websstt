@@ -1,3 +1,5 @@
+const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let total = parseFloat(localStorage.getItem('total')) || 0;
 
