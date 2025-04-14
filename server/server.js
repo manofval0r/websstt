@@ -43,18 +43,22 @@ app.get('/api/orders', async (req, res) => {
 // API to place a new order
 app.post('/api/orders', async (req, res) => {
     try {
+        console.log('Incoming Order:', req.body);
+
         const newOrder = req.body;
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         const orders = JSON.parse(ordersData);
 
-        newOrder.id = String(orders.length > 0 ? orders[orders.length - 1].id + 1 : 1); // Convert ID to string
+        newOrder.id = orders.length > 0 ? String(parseInt(orders[orders.length - 1].id) + 1) : '1';
         newOrder.created_at = new Date().toISOString();
-        newOrder.customer_name = newOrder.customer_name || 'Unknown Customer'; // Add default customer_name
-        newOrder.status = 'Pending'; // Add default status
+        newOrder.customer_name = newOrder.customer_name || 'Unknown Customer';
+        newOrder.status = 'Pending';
 
         orders.push(newOrder);
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-        res.status(201).json({ success: true }); // Consistent response format
+        console.log('Order Saved:', newOrder);
+
+        res.status(201).json({ success: true, order: newOrder });
     } catch (error) {
         console.error('Error placing order:', error);
         res.status(500).json({ message: 'Failed to place order' });
@@ -90,7 +94,9 @@ app.patch('/api/orders/:id', async (req, res) => {
         const orderId = parseInt(req.params.id);
         const { payment_confirmed } = req.body;
 
-        // Validate the request body
+        console.log(`Updating payment status for Order ID: ${orderId}`);
+        console.log('Request Body:', req.body);
+
         if (typeof payment_confirmed !== 'boolean') {
             return res.status(400).json({ message: 'payment_confirmed must be a boolean' });
         }
@@ -98,15 +104,15 @@ app.patch('/api/orders/:id', async (req, res) => {
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         let orders = JSON.parse(ordersData);
 
-        // Find the order
         const orderIndex = orders.findIndex(order => order.id === orderId);
         if (orderIndex === -1) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Update the payment_confirmed status
         orders[orderIndex].payment_confirmed = payment_confirmed;
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
+        console.log('Payment status updated:', orders[orderIndex]);
+
         res.status(200).json({ message: 'Payment status updated successfully' });
     } catch (error) {
         console.error('Error updating payment status:', error);
@@ -117,5 +123,5 @@ app.patch('/api/orders/:id', async (req, res) => {
 // Start the server
 app.listen(PORT, async () => {
     await initializeOrdersFile();
-    console.log(Server running on http://localhost:${PORT});
+    console.log(`Server running on http://localhost:${PORT}`);
 });
