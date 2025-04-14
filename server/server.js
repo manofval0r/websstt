@@ -47,12 +47,14 @@ app.post('/api/orders', async (req, res) => {
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         const orders = JSON.parse(ordersData);
 
-        newOrder.id = orders.length > 0 ? orders[orders.length - 1].id + 1 : 1;
+        newOrder.id = String(orders.length > 0 ? orders[orders.length - 1].id + 1 : 1); // Convert ID to string
         newOrder.created_at = new Date().toISOString();
+        newOrder.customer_name = newOrder.customer_name || 'Unknown Customer'; // Add default customer_name
+        newOrder.status = 'Pending'; // Add default status
 
         orders.push(newOrder);
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-        res.status(201).json({ message: 'Order placed successfully' });
+        res.status(201).json({ success: true }); // Consistent response format
     } catch (error) {
         console.error('Error placing order:', error);
         res.status(500).json({ message: 'Failed to place order' });
@@ -115,5 +117,5 @@ app.patch('/api/orders/:id', async (req, res) => {
 // Start the server
 app.listen(PORT, async () => {
     await initializeOrdersFile();
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(Server running on http://localhost:${PORT});
 });
