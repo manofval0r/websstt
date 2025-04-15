@@ -123,6 +123,7 @@ async function submitOrder() {
 window.updateDeliveryFee = updateDeliveryFee;
 window.showPaymentDetails = showPaymentDetails;
 window.submitOrder = submitOrder;
+window.deliveryFee = deliveryFee;
 
 window.addEventListener('load', function() {
     updateCartSummary();

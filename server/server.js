@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
+
 
 // Allow requests from your Vercel frontend
 const allowedOrigins = ['https://sidedishfoodsweb.vercel.app', 'http://localhost:3000'];
@@ -49,26 +49,30 @@ app.post('/api/orders', async (req, res) => {
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         const orders = JSON.parse(ordersData);
 
-        newOrder.id = orders.length > 0 ? String(parseInt(orders[orders.length - 1].id) + 1) : '1';
+        // Generate a new ID for the order
+        const lastId = orders.length > 0 ? parseInt(orders[orders.length - 1].id) : 0;
+        newOrder.id = (lastId + 1).toString();
         newOrder.created_at = new Date().toISOString();
-        newOrder.customer_name = newOrder.customer_name || 'Unknown Customer';
         newOrder.status = 'Pending';
 
+        // Add the new order to the list
         orders.push(newOrder);
+
+        // Save the updated orders list to the file
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
         console.log('Order Saved:', newOrder);
 
         res.status(201).json({ success: true, order: newOrder });
     } catch (error) {
-        console.error('Error placing order:', error);
-        res.status(500).json({ message: 'Failed to place order' });
+        console.error('Error saving order:', error);
+        res.status(500).json({ message: 'Failed to save order' });
     }
 });
 
 // API to delete an order by ID
 app.delete('/api/orders/:id', async (req, res) => {
     try {
-        const orderId = parseInt(req.params.id); // Parse the order ID from the URL
+        const orderId = req.params.id; // Parse the order ID from the URL
         console.log(`Deleting order with ID: ${orderId}`); // Debugging log
 
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
@@ -92,7 +96,7 @@ app.delete('/api/orders/:id', async (req, res) => {
 // API to update an order's payment_confirmed status
 app.patch('/api/orders/:id', async (req, res) => {
     try {
-        const orderId = parseInt(req.params.id); // Parse the order ID from the URL
+        const orderId = req.params.id; // Parse the order ID from the URL
         const { payment_confirmed } = req.body; // Get the new payment status from the request body
 
         console.log(`Updating payment status for Order ID: ${orderId}`); // Debugging log
