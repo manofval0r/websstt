@@ -75,7 +75,6 @@
                 <option value="">Select State</option>
                 <option value="Kano">Kano</option>
                 <option value="Abia">Abia</option>
-                <!-- other states omitted for brevity -->
                 <option value="FCT">FCT (Abuja)</option>
             </select>
             <p class="error-message" id="city-error" role="alert">Please select a state.</p>
@@ -100,7 +99,7 @@
             </div>
             <p class="error-message" id="payment-error" role="alert">Please select a payment method.</p>
         </div>
-        <button class="btn place-order-btn" onclick="submitOrder()" aria-label="Place order">Place Order</button>
+        <button class="btn place-order-btn" onclick="window.submitOrder()" aria-label="Place order">Place Order</button>
     </div>
     <div class="footer">
         <p>Address: 479 Shehu Kazaura Rd, Hotoro, Kano</p>
@@ -108,7 +107,16 @@
         <p>Instagram: <a href="https://instagram.com/sidedish_foods" target="_blank">@sidedish_foods</a></p>
     </div>
     <script>
-        let deliveryFee = 0;
+        window.deliveryFee = 0;
+
+    window.addEventListener('load', function () {
+        if (typeof updateCartSummary === 'function') {
+            updateCartSummary();
+        }
+        if (typeof updateDeliveryFee === 'function') {
+            updateDeliveryFee();
+        }
+    });
     </script>
     <script src="script.js"></script>
 </body>
