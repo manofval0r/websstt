@@ -68,19 +68,20 @@ app.post('/api/orders', async (req, res) => {
 // API to delete an order by ID
 app.delete('/api/orders/:id', async (req, res) => {
     try {
-        const orderId = parseInt(req.params.id);
+        const orderId = parseInt(req.params.id); // Parse the order ID from the URL
+        console.log(`Deleting order with ID: ${orderId}`); // Debugging log
+
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         let orders = JSON.parse(ordersData);
 
-        // Check if the order exists
         const orderIndex = orders.findIndex(order => order.id === orderId);
         if (orderIndex === -1) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Remove the order
-        orders = orders.filter(order => order.id !== orderId);
+        orders.splice(orderIndex, 1); // Remove the order
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
+        console.log(`Order #${orderId} deleted successfully.`);
         res.status(200).json({ message: 'Order deleted successfully' });
     } catch (error) {
         console.error('Error deleting order:', error);
@@ -91,15 +92,10 @@ app.delete('/api/orders/:id', async (req, res) => {
 // API to update an order's payment_confirmed status
 app.patch('/api/orders/:id', async (req, res) => {
     try {
-        const orderId = parseInt(req.params.id);
-        const { payment_confirmed } = req.body;
+        const orderId = parseInt(req.params.id); // Parse the order ID from the URL
+        const { payment_confirmed } = req.body; // Get the new payment status from the request body
 
-        console.log(`Updating payment status for Order ID: ${orderId}`);
-        console.log('Request Body:', req.body);
-
-        if (typeof payment_confirmed !== 'boolean') {
-            return res.status(400).json({ message: 'payment_confirmed must be a boolean' });
-        }
+        console.log(`Updating payment status for Order ID: ${orderId}`); // Debugging log
 
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         let orders = JSON.parse(ordersData);
@@ -109,10 +105,9 @@ app.patch('/api/orders/:id', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        orders[orderIndex].payment_confirmed = payment_confirmed;
+        orders[orderIndex].payment_confirmed = payment_confirmed; // Update the payment status
         await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-        console.log('Payment status updated:', orders[orderIndex]);
-
+        console.log(`Payment status for Order #${orderId} updated successfully.`);
         res.status(200).json({ message: 'Payment status updated successfully' });
     } catch (error) {
         console.error('Error updating payment status:', error);
