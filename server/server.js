@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASE_URL = 'https://sidedish-backend.onrender.com';
+const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
 
 // Allow requests from your Vercel frontend
 const allowedOrigins = ['https://sidedishfoodsweb.vercel.app', 'http://localhost:3000'];
@@ -33,7 +33,7 @@ app.get('/api/orders', async (req, res) => {
     try {
         const ordersData = await fs.readFile(ordersFilePath, 'utf8');
         const orders = JSON.parse(ordersData);
-        res.json(orders);
+        res.status(200).json(orders);
     } catch (error) {
         console.error('Error fetching orders:', error);
         res.status(500).json({ message: 'Failed to fetch orders' });
@@ -154,6 +154,31 @@ async function placeOrder() {
     } catch (error) {
         console.error('Network Error:', error.message);
         alert('An error occurred: ' + error.message);
+    }
+}
+
+async function fetchOrders() {
+    try {
+        console.log('Fetching orders...');
+        const response = await fetch(`${BASE_URL}/api/orders`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Response Status:', response.status);
+        if (response.ok) {
+            const orders = await response.json();
+            console.log('Fetched Orders:', orders);
+            // Process and display orders...
+        } else {
+            const errorText = await response.text();
+            console.error('Error fetching orders, status:', response.status, 'Response:', errorText);
+            alert('Failed to fetch orders: ' + (response.statusText || 'Unknown error.'));
+        }
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        alert('An error occurred while fetching orders: ' + error.message);
     }
 }
 
