@@ -398,6 +398,8 @@
 
         // Function to delete an order
         async function deleteOrder(orderId) {
+            console.log(`Attempting to delete order with ID: ${orderId}`); // Debugging log
+
             if (!confirm(`Are you sure you want to delete Order #${orderId}?`)) {
                 return;
             }
@@ -411,10 +413,11 @@
                 });
 
                 if (response.ok) {
+                    console.log(`Order #${orderId} deleted successfully.`);
                     fetchOrders(); // Refresh the order list
                 } else {
                     const errorText = await response.text();
-                    console.error('Error deleting order, status:', response.status, 'Response:', errorText);
+                    console.error(`Error deleting order, status: ${response.status}, Response: ${errorText}`);
                     alert('Failed to delete order: ' + (errorText || 'Unknown error. Please try again.'));
                 }
             } catch (error) {
@@ -425,6 +428,8 @@
 
         // Function to toggle payment confirmed status
         async function togglePaymentConfirmed(orderId, currentStatus) {
+            console.log(`Attempting to update payment status for order with ID: ${orderId}`); // Debugging log
+
             try {
                 const newStatus = !currentStatus; // Toggle the status
                 const response = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
@@ -436,10 +441,11 @@
                 });
 
                 if (response.ok) {
+                    console.log(`Payment status for Order #${orderId} updated successfully.`);
                     fetchOrders(); // Refresh the order list
                 } else {
                     const errorText = await response.text();
-                    console.error('Error updating payment status, status:', response.status, 'Response:', errorText);
+                    console.error(`Error updating payment status, status: ${response.status}, Response: ${errorText}`);
                     alert('Failed to update payment status: ' + (errorText || 'Unknown error. Please try again.'));
                 }
             } catch (error) {
