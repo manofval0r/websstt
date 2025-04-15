@@ -182,25 +182,6 @@
             orderItemsContainer.innerHTML = html;
             orderTotalElement.textContent = total.toLocaleString('en-NG');
         }
-        fetch(`${BASE_URL}/api/orders`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                items: [{ name: 'Test Item', price: 1000 }],
-                total: 1000,
-                address: 'Test Address',
-                state: 'Kano',
-                delivery_option: 'delivery',
-                payment_method: 'cash-on-delivery',
-                payment_confirmed: false,
-                delivery_fee: 2400
-            })
-        })
-            .then(response => response.json())
-            .then(data => console.log('Success:', data))
-            .catch(error => console.error('Error:', error));
     </script>
 </body>
 </html>
