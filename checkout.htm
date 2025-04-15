@@ -119,5 +119,54 @@
     });
     </script>
     <script src="script.js"></script>
+    <script>
+        // Inline JavaScript code that depends on BASE_URL
+        window.addEventListener('load', function() {
+            try {
+                updateCheckoutSummary();
+                updateDeliveryFee();
+            } catch (error) {
+                console.error('Error during window.onload:', error);
+            }
+        });
+        function updateCheckoutSummary() {
+            console.log('Updating checkout summary...');
+            const orderItemsContainer = document.getElementById('order-items');
+            const orderTotalElement = document.getElementById('order-total');
+
+            if (!cart.length) {
+                orderItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                orderTotalElement.textContent = '0';
+                return;
+            }
+
+            let html = '';
+            cart.forEach(item => {
+                html += `<p>${item.name} - ${item.price.toLocaleString('en-NG')} NGN</p>`;
+            });
+
+            orderItemsContainer.innerHTML = html;
+            orderTotalElement.textContent = total.toLocaleString('en-NG');
+        }
+        fetch(`${BASE_URL}/api/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                items: [{ name: 'Test Item', price: 1000 }],
+                total: 1000,
+                address: 'Test Address',
+                state: 'Kano',
+                delivery_option: 'delivery',
+                payment_method: 'cash-on-delivery',
+                payment_confirmed: false,
+                delivery_fee: 2400
+            })
+        })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch(error => console.error('Error:', error));
+    </script>
 </body>
 </html>
