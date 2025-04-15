@@ -304,7 +304,7 @@
         <h2>Login to View Orders</h2>
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="passcode" placeholder="Passcode" required>
-        <button class="btn" onclick="login()">Login</button>
+        <button class="btn" id="login-btn">Login</button>
         <p class="error-message" id="login-error" style="display: none;">Invalid email or passcode.</p>
     </div>
     <div class="section order-list-section" id="order-list-section" style="display: none;">
@@ -343,7 +343,8 @@
     <script src="script.js"></script>
     <script>
         // Define the base URL based on the environment
-        const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
+        window.BASE_URL = window.BASE_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com');
+
 
         // Hardcoded credentials (for demonstration purposes)
         const VALID_EMAIL = "ayshaahmad360@gmail.com";       
@@ -362,6 +363,8 @@
                 loginError.style.display = 'block';
             }
         }
+        document.getElementById('login-btn').addEventListener('click', login);
+
 
         // Debounce setup
         let searchTimeout;
@@ -553,6 +556,15 @@
                 alert('An error occurred while fetching orders: ' + error.message + '. Please check your internet connection and try again.');
             }
         }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                updateCheckoutSummary();
+                updateDeliveryFee();
+            } catch (error) {
+                console.error('Error during DOMContentLoaded:', error);
+            }
+        });
     </script>
 </body>
 </html>
