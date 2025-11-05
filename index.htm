@@ -1,96 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidedish Foods</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <title>Sidedish Foods - Delicious Meals Delivered in Kano</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .hero {
-            position: relative;
-            height: 500px;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('assets/fried-rice.jpg') center/cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-        .hero-content {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            border-radius: 10px;
-        }
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            text-shadow: 2px 2px 4px #4a2c2a;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 20px;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-        .featured-classes {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .featured-classes .card {
-            width: 30%;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="home.css">
 </head>
+
 <body>
-    <div class="header">
-        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
-        <p class="tagline">The Side You Can’t Afford to Miss</p>
-        <nav>
-            <a href="index.htm">Home</a>
-            <a href="menu.htm">Menu</a>
-            <a href="about.htm">About</a>
-            <a href="contact.htm">Contact</a>
-            <a href="order-list.htm">The Order List</a>
-            <a href="admin-dashboard.htm">Admin Dashboard</a>
-        </nav>
+    <!-- <header class="header"> -->
+    <!-- <img src="assets/logo.jpg" alt="Sidedish Foods Logo"> -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="tagline">🍽️ The Side You Can’t Afford to Miss</div>
+            <ul class="nav-links">
+                <li><a href="index.htm">Home</a></li>
+                <li><a href="menu.htm">Menu</a></li>
+                <li><a href="about.htm">About</a></li>
+                <li><a href="contact.htm">Contact</a></li>
+                <li><a href="order-list.htm">Orders</a></li>
+                <li><a href="admin-dashboard.htm">Admin</a></li>
+            </ul>
+            <div class="user-controls">
+                <button id="login-btn" class="btn btn-text" onclick="openModal('login-modal')" style="display: flex">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Sign In</span>
+                </button>
+                <div id="user-info" style="display: none">
+                    <span id="user-name"></span>
+                    <button class="btn btn-text" onclick="handleLogout()">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                <button id="cart-toggle" class="btn btn-text cart-badge" data-count="0" title="Open cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-count" class="sr-only">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal (shared) -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sign In to Continue</h3>
+                <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+                            <i class="fa-brands fa-google"></i> Sign in with Google
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
     <div class="hero">
         <div class="hero-content">
-            <h1>Welcome to Sidedish Foods</h1>
-            <p>Delicious Meals Delivered in Kano!</p>
-            <button class="btn" onclick="window.location.href='menu.htm'">Order Now</button>
+            <h1>Authentic Cuisines, Nigeria and Beyond</h1>
+            <p>From Kano, with love. Delicious meals delivered straight to your door.</p>
+            <a href="menu.htm" class="btn btn-primary">View Menu & Order Now</a>
+            <a href="about.htm" class="btn btn-secondary" style="margin-left: 15px;">Learn Our Story</a>
         </div>
     </div>
-    <div class="section">
-        <h2>Our Offerings</h2>
-        <div class="featured-classes">
-            <div class="card">
-                <img src="assets/fried-rice.jpg" alt="Food">
-                <h3>Food</h3>
-                <p>Savor our hearty dishes like Fried Rice, Jollof Rice, and Beef-on-Stick.</p>
-                <button class="btn" onclick="window.location.href='menu.htm#food'">View Menu</button>
-            </div>
-            <div class="card">
-                <img src="assets/zobo.jpg" alt="Drinks">
+
+    <!-- Featured Categories -->
+    <div class="section container">
+        <h2>Browse by Category</h2>
+        <div class="categories-grid">
+            <a href="menu.htm#mains" class="category-card">
+                <i class="fa-solid fa-utensils"></i>
+                <h3>Main Courses</h3>
+                <span class="item-count">12+ items</span>
+            </a>
+            <a href="menu.htm#drinks" class="category-card">
+                <i class="fa-solid fa-glass-water"></i>
                 <h3>Drinks</h3>
-                <p>Refresh with our Zobo, Kunu Aya, or Tamarind Drink.</p>
-                <button class="btn" onclick="window.location.href='menu.htm#drinks'">View Menu</button>
+                <span class="item-count">8+ items</span>
+            </a>
+            <a href="menu.htm#sides" class="category-card">
+                <i class="fa-solid fa-bowl-food"></i>
+                <h3>Side Dishes</h3>
+                <span class="item-count">10+ items</span>
+            </a>
+            <a href="menu.htm#desserts" class="category-card">
+                <i class="fa-solid fa-ice-cream"></i>
+                <h3>Desserts</h3>
+                <span class="item-count">5+ items</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Special Offers Carousel -->
+    <div class="section container">
+        <h2>Special Offers</h2>
+        <div class="offers-wrapper">
+            <div class="offers-carousel" id="offers-carousel">
+                <div class="offers-track">
+                    <div class="offer-card">
+                        <div class="offer-badge">SAVE 20%</div>
+                        <div class="offer-image">
+                            <img src="./assets/fried-rice.jpg" alt="Weekend Special">
+                        </div>
+                        <div class="offer-content">
+                            <h3>Weekend Special</h3>
+                            <p>Get 20% off on all main courses this weekend!</p>
+                            <a href="menu.htm" class="btn btn-accent">View Offer</a>
+                        </div>
+                    </div>
+                    <div class="offer-card">
+                        <div class="offer-badge">FREE</div>
+                        <div class="offer-image">
+                            <img src="./assets/zobo.jpg" alt="Free Drink">
+                        </div>
+                        <div class="offer-content">
+                            <h3>Free Drink</h3>
+                            <p>Free zobo with orders above 5,000 NGN</p>
+                            <a href="menu.htm" class="btn btn-accent">Order Now</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-                <img src="assets/samosa.jpg" alt="Snacks">
-                <h3>Snacks</h3>
-                <p>Grab a quick bite with Samosas, Spring Rolls, or Meat Pies.</p>
-                <button class="btn" onclick="window.location.href='menu.htm#snacks'">View Menu</button>
+            <button class="nav-btn prev" onclick="moveCarousel(-1)">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="nav-btn next" onclick="moveCarousel(1)">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Popular Dishes -->
+    <div class="section container peek">
+        <h2>Our Popular Dishes</h2>
+        <div class="grid">
+            <div class="card menu-item-card">
+                <!-- <div class="card-badge">Best Seller</div> -->
+                <img src="./assets/fried-rice.jpg" alt="fried rice.jpg">
+                <h3>Signature Fried Rice</h3>
+                <p class="small">Aromatic rice tossed with wholesome vegetables and our secret blend of spices.</p>
+                <p class="kicker">From 1,500 NGN</p>
+                <a href="menu.htm" class="btn-order">Order Now</a>
+            </div>
+            <div class="card menu-item-card">
+                <!-- <div class="card-badge">Popular</div> -->
+                <img src="./assets/zobo.jpg" alt="Zobo.jpg">
+                <h3>Zobo Drink</h3>
+                <p class="small">Refreshing hibiscus-based drink — cool, tangy, and naturally sweetened.</p>
+                <p class="kicker">From 300 NGN</p>
+                <a href="menu.htm" class="btn-order">Order Now</a>
+            </div>
+            <div class="card menu-item-card">
+                <img src="./assets/samosa.jpg" alt="Samosa.jpg">
+                <h3>Samosa Combo</h3>
+                <p class="small">Golden, crispy samosas with choice of fillings, perfect for snacks or appetizers.</p>
+                <p class="kicker">From 500 NGN</p>
+                <a href="menu.htm" class="btn-order">Order Now</a>
             </div>
         </div>
     </div>
-    <div class="footer">
-        <p>Address: 479 Shehu Kazaura Rd, Hotoro, Kano</p>
-        <p>Contact: 07019631217, 08054915919</p>
-        <p>Instagram: <a href="https://instagram.com/sidedish_foods" target="_blank">@sidedish_foods</a></p>
+
+    <!-- Stats Section -->
+    <div class="section stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="500">0</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="30">0</div>
+                    <div class="stat-label">Menu Items</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="3">0</div>
+                    <div class="stat-label">Years of Service</div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- How It Works -->
+    <div class="section how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <i class="fa-solid fa-utensils step-icon"></i>
+                    <h3>Choose Your Food</h3>
+                    <p>Browse our menu and select your favorite dishes</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <i class="fa-solid fa-cart-shopping step-icon"></i>
+                    <h3>Place Your Order</h3>
+                    <p>Add items to cart and proceed to checkout</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <i class="fa-solid fa-truck step-icon"></i>
+                    <h3>Fast Delivery</h3>
+                    <p>Get your food delivered fresh to your doorstep</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <i class="fa-solid fa-heart step-icon"></i>
+                    <h3>Enjoy Your Meal</h3>
+                    <p>Savor the delicious taste of our cuisine</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="section testimonials">
+        <div class="container">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="assets/customer.png" alt="Customer" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>Aisha Ibrahim</h4>
+                            <div class="testimonial-date">2 weeks ago</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The food is always fresh and delicious. Their delivery is prompt and
+                        the packaging is excellent. Highly recommended!"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="assets/customer2.png" alt="Customer" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>Mohammed Sani</h4>
+                            <div class="testimonial-date">1 month ago</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half"></i>
+                    </div>
+                    <p class="testimonial-text">"Best fried rice in Kano! The portion sizes are generous and the taste
+                        is authentic. Will order again!"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="assets/customer3.png" alt="Customer" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>Fatima Usman</h4>
+                            <div class="testimonial-date">3 days ago</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Amazing service! The zobo drink is perfect and the samosas are always
+                        crispy. My family's favorite!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="section newsletter">
+        <div class="container">
+            <h2>Stay Updated with Special Offers</h2>
+            <p>Subscribe to our newsletter and get exclusive deals directly in your inbox</p>
+            <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+                <input type="email" id="newsletter-email" class="newsletter-input"
+                    placeholder="Enter your email address" required>
+                <button type="submit" class="btn btn-accent">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
 </body>
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-left">
+            <p>&copy; 2025 Sidedish Foods. All rights reserved.</p>
+        </div>
+
+        <div class="footer-center">
+            <ul class="social-links">
+                <li>
+                    <a href="https://instagram.com/sidedish_foods" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i> @sidedish_foods
+                    </a>
+                </li>
+                <li>
+                    <a href="" target="_blank" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i> @yourhandle
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer-right">
+            <p class="acknowledge-me">
+                <a href="https://david-idowu-portfolio.vercel.app/">By Valor | AI Full-Stack</a>
+            </p>
+        </div>
+    </div>
+</footer>
+<script src="script.js"></script>
+<script src="home.js"></script>
+<script>
+    (function () {
+        try {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCountElement = document.getElementById('cart-count');
+            const cartLinkElement = document.getElementById('cart-link');
+
+            if (cartCountElement) {
+                const count = cart.reduce((sum, item) => sum + 1, 0);
+                cartCountElement.textContent = count;
+                cartLinkElement.setAttribute('data-count', count);
+            }
+        } catch (e) {
+            console.error('Error initializing cart count:', e);
+        }
+    })();
+</script>
+
 </html>

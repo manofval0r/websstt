@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Staff Login - Sidedish Foods</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-card {
+            max-width: 420px;
+            margin: 48px auto;
+            padding: 26px;
+            border-radius: 10px;
+            background: var(--card);
+            box-shadow: var(--shadow)
+        }
+
+        .login-card h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            text-align: center
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px
+        }
+
+        .login-card .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px
+        }
+
+        .error-message {
+            color: #c32;
+            display: none;
+            margin-top: 8px;
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
+        <nav>
+            <a href="index.htm">Home</a>
+            <a href="menu.htm">Menu</a>
+            <a href="admin-dashboard.htm">Admin Dashboard</a>
+        </nav>
+    </div>
+
+    <div class="login-card card">
+        <h2>Staff Login</h2>
+        <input id="email" type="email" placeholder="Email" autocomplete="username" required>
+        <div style="position:relative">
+            <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+            <button type="button" id="togglePassword" class="btn secondary"
+                style="position:absolute;right:0;top:8px;padding:10px;background:none;box-shadow:none;width:auto;font-size:18px">👁️</button>
+        </div>
+        <button class="btn" id="loginBtn">Login</button>
+        <p class="error-message" id="loginError">Invalid credentials or server error.</p>
+        <p class="small center" style="margin-top:12px">This area is for staff only. Use your staff credentials to sign
+            in.</p>
+    </div>
+
+    <script>
+        const BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com';
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+            loginError.style.display = 'none';
+            if (!email || !password) { loginError.textContent = 'Email and password required.'; loginError.style.display = 'block'; return; }
+            try {
+                const resp = await fetch(`${BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                if (!resp.ok) {
+                    loginError.textContent = 'Invalid credentials.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+                const data = await resp.json();
+                localStorage.setItem('admin_token', data.token);
+                window.location.href = 'admin-dashboard.htm';
+            } catch (err) {
+                console.error('Login failed', err);
+                loginError.textContent = 'Server error. Try again.';
+                loginError.style.display = 'block';
+            }
+        });
+
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+    </script>
+</body>
+
+</html>

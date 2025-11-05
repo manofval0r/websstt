@@ -1,74 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Sidedish Foods</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .team-member {
-            margin: 20px 0;
-            align-items: center;
-        }
-        .team-member h4 {
-            font-family: 'Playfair Display', serif;
-            color: #4a2c2a;
-            align-items: center;
-        }
-        .team-member p {
-            font-style: italic;
-            align-items: center;
-        }
-    </style>
+
 </head>
+
 <body>
-    <div class="header">
-        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
-        <nav>
-            <a href="index.htm">Home</a>
-            <a href="menu.htm">Menu</a>
-            <a href="about.htm">The Team</a>
-            <a href="contact.htm">Contact</a>
-            <a href="admin-dashboard.htm">Admin Dashboard</a>
-        </nav>
-    </div>
-    <div class="section">
-        <h2>About Sidedish Foods</h2>
-        <div class="card">
-            <p style="text-align: center;">Sidedish Foods is your go-to spot in Kano for delicious, affordable meals. From our flavorful Fried Rice to refreshing Zobo drinks, we bring the best of local cuisine to your table. Visit us at 479 Shehu Kazaura Rd, Hotoro, Kano, or order online for quick delivery!</p>
-            <img src="assets/salad-trays.jpg" alt="Salad Trays">
-        </div>
-        <div class="card">
-            <h3>Our Team</h3>
-            <div class="team-member">
-                <h4>CEO: Aisha Ahmad</h4>
-                <p>Aisha Ahmad is a smart, young woman with a passion for cooking. Her culinary skills make her the perfect fit for the kitchen, not just as a cook but as a visionary restaurateur.</p>
-            </div>
-            <div class="team-member">
-                <h4>Chefs</h4>
-                <p><strong>Aisha Ahmad Abdullahi:</strong> Not just the restaurateur, Mrs. Aisha Abdullahi is a chef whose culinary skills may exceed certain expectations.</p>
-                <p><strong>Maryam Rabiu:</strong> An exemplary chef with 10 years of experience, Maryam brings expertise and creativity to every dish.</p>
-                <p><strong>Safiyyah Ahmad:</strong> A talented chef whose skills leave us speechless.</p>
-            </div>
-            <div class="team-member">
-                <h4>Website Creator: Khadijah Ahmed</h4>
-                <p>Email: <a href="mailto:haniifaahmad01@gmail.com">haniifaahmad01@gmail.com</a></p>
-                <p>Phone: 07075084757</p>
-                <p>GitHub: <a href="https://github.com/haniifa-ahmad" target="_blank">https://github.com/haniifa-ahmad</a></p>
-            </div>
-            <div class="team-member">
-                <h4>Website Help: Idowu David</h4>
-                <p>Email: <a href="mailto:apexheightgames.valor@gmail.com">apexheightgames.valor@gmail.com</a></p>
-                <p>Phone: 07037000448</p>
-                <p>GitHub: <a href="https://github.com/manofval0r" target="_blank">https://github.com/manofval0r</a></p>
+    <nav class="navbar">
+        <div class="container">
+            <div class="tagline">🍽️ The Side You Can’t Afford to Miss</div>
+            <ul class="nav-links">
+                <li><a href="index.htm">Home</a></li>
+                <li><a href="menu.htm">Menu</a></li>
+                <li><a href="about.htm">About</a></li>
+                <li><a href="contact.htm">Contact</a></li>
+                <li><a href="order-list.htm">Orders</a></li>
+                <li><a href="admin-dashboard.htm">Admin</a></li>
+            </ul>
+            <div class="user-controls">
+                <button id="login-btn" class="btn btn-text" onclick="openModal('login-modal')" style="display: flex">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Sign In</span>
+                </button>
+                <div id="user-info" style="display: none">
+                    <span id="user-name"></span>
+                    <button class="btn btn-text" onclick="handleLogout()">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                <button id="cart-toggle" class="btn btn-text cart-badge" data-count="0" title="Open cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-count" class="sr-only">0</span>
+                </button>
             </div>
         </div>
+    </nav>
+    <div class="about-section">
+        <div class="about-intro">
+            <div class="about-text">
+                <h2>About <span>Sidedish Foods</span></h2>
+                <p>
+                    At Sidedish Foods, we believe every meal should be memorable.
+                    From our signature Fried Rice to refreshing Zobo, we bring bold flavors
+                    and authentic local cuisine to your table. Whether you dine in or order online,
+                    we’re here to serve Kano with passion and taste.
+                </p>
+                <p class="location">
+                    📍 479 Shehu Kazaura Rd, Hotoro, Kano
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="assets/salad-trays.jpg" alt="Delicious Salad Trays">
+            </div>
+        </div>
+    
+        <div class="team-section">
+            <h3>Meet Our Team</h3>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="assets/customer3.png" alt="CEO Aisha Ahmad">
+                    <h4>Aisha Ahmad</h4>
+                    <p class="role">CEO & Visionary Restaurateur</p>
+                    <p>Passionate about food and innovation, Aisha leads with creativity and heart.</p>
+                </div>
+                <div class="team-member">
+                    <img src="assets/staff2.png" alt="Chef Maryam Rabiu">
+                    <h4>Maryam Rabiu</h4>
+                    <p class="role">Head Chef</p>
+                    <p>With 10 years of experience, Maryam brings expertise and artistry to every dish.</p>
+                </div>
+                <div class="team-member">
+                    <img src="assets/staff3.png" alt="Chef Safiyyah Ahmad">
+                    <h4>Safiyyah Ahmad</h4>
+                    <p class="role">Chef</p>
+                    <p>A rising culinary talent whose creativity leaves a lasting impression.</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer">
-        <p>Address: 479 Shehu Kazaura Rd, Hotoro, Kano</p>
-        <p>Contact: 07019631217, 08054915919</p>
-        <p>Instagram: <a href="https://instagram.com/sidedish_foods" target="_blank">@sidedish_foods</a></p>
-    </div>
+
 </body>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>&copy; 2025 Sidedish Foods. All rights reserved.</p>
+            </div>
+
+            <div class="footer-center">
+                <ul class="social-links">
+                    <li>
+                        <a href="https://instagram.com/sidedish_foods" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i> @sidedish_foods
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" target="_blank" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i> @sidedishfoods
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-right">
+                <p class="acknowledge-me">
+                    <a href="https://david-idowu-portfolio.vercel.app/">By Valor | AI Full-Stack</a>
+                </p>
+            </div>
+        </div>
+    </footer>
 </html>
