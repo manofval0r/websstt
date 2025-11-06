@@ -2,5 +2,10 @@
   {
     "email": "admin@sidedish.test",
     "password": "$2b$12$zir13ufFlOK4I9ljHGzU2OoVOVz78AyEi4jOUKfTgOcZGsKWndHte"
+  },
+  {
+    "name": "David Ayonifemi Idowu",
+    "email": "apexheightgames.valor@gmail.com",
+    "password": "$2b$12$eE4/iGvm3VGafaPZnsNzx.bf.RPry9IJW7oGQ7YNysxGnR.8NjNm6"
   }
 ]

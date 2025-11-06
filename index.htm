@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidedish Foods - Delicious Meals Delivered in Kano</title>
+    <!-- ADD THIS META TAG for Google Client ID -->
+    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
@@ -50,7 +54,7 @@
         </div>
     </nav>
 
-    <!-- Login Modal (shared) -->
+    <!-- Login Modal -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -61,22 +65,72 @@
                 <form id="login-form" onsubmit="handleLogin(event)">
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" required>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Sign In</button>
-                        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
-                            <i class="fa-brands fa-google"></i> Sign in with Google
-                        </button>
+                        <!-- Updated Google Button - GSI will render here -->
+                        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                            data-callback="handleGoogleCredentialResponse" data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                            data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"
+                            data-width="300px"></div>
+                        <!-- Removed the old button with onclick="signInWithGoogle()" as GSI handles it -->
                     </div>
+                    <p class="switch-auth">
+                        Don’t have an account? <a href="#" onclick="switchToSignup()">Sign Up</a>
+                    </p>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Your Account</h3>
+                <button class="close-modal" onclick="closeModal('signup-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="signup-form" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email:</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password:</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password:</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                        <!-- Updated Google Button - GSI will render here -->
+                        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                            data-text="sign_up_with" data-shape="rectangular" data-logo_alignment="left"
+                            data-width="300px"></div>
+                        <!-- Removed the old button with onclick="signUpWithGoogle()" as GSI handles it -->
+                    </div>
+                    <p class="switch-auth">
+                        Already have an account? <a href="#" onclick="switchToLogin()">Sign In</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <div class="hero">
         <div class="hero-content">
@@ -351,22 +405,29 @@
 </footer>
 <script src="script.js"></script>
 <script src="home.js"></script>
+<!-- The GSI script is here. It will automatically find the divs with class="g_id_signin" -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-    (function () {
+    // This script block should also be updated or removed as updateCartSummary() is now called from script.js
+    document.addEventListener('DOMContentLoaded', () => {
+        // This existing block is now redundant, as updateCartSummary is called by script.js's DOMContentLoaded
+        // Keeping it for reference to show it's no longer needed here.
+        /*
         try {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartCountElement = document.getElementById('cart-count');
-            const cartLinkElement = document.getElementById('cart-link');
+            const cartBadgeElement = document.getElementById('cart-toggle'); // Corrected element reference
 
-            if (cartCountElement) {
-                const count = cart.reduce((sum, item) => sum + 1, 0);
+            if (cartCountElement && cartBadgeElement) {
+                const count = cart.reduce((sum, item) => sum + item.qty, 0); // Sum quantities
                 cartCountElement.textContent = count;
-                cartLinkElement.setAttribute('data-count', count);
+                cartBadgeElement.setAttribute('data-count', count);
             }
         } catch (e) {
             console.error('Error initializing cart count:', e);
         }
-    })();
+        */
+    });
 </script>
 
 </html>

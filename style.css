@@ -353,6 +353,19 @@ a{color:var(--accent);text-decoration:none}
   transform: scaleX(1);
 }
 
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+
 /* Theme toggle button */
 .theme-toggle {
   background: none;
