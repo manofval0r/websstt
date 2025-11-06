@@ -56,16 +56,17 @@ function animateStats() {
     
     stats.forEach(stat => {
         const target = parseInt(stat.getAttribute('data-target'));
+        const suffix = stat.getAttribute('data-suffix') || '';
         const duration = 2000; // 2 seconds
         const increment = target / (duration / 16); // 60fps
         let current = 0;
         
         const counter = setInterval(() => {
             current += increment;
-            stat.textContent = Math.floor(current);
+            stat.textContent = Math.floor(current) + suffix;
             
             if (current >= target) {
-                stat.textContent = target;
+                stat.textContent = target + suffix;
                 clearInterval(counter);
             }
         }, 16);

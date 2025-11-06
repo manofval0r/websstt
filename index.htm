@@ -9,6 +9,10 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home.css">
 </head>
@@ -23,9 +27,9 @@
                 <li><a href="index.htm">Home</a></li>
                 <li><a href="menu.htm">Menu</a></li>
                 <li><a href="about.htm">About</a></li>
-                <li><a href="contact.htm">Contact</a></li>
-                <li><a href="order-list.htm">Orders</a></li>
-                <li><a href="admin-dashboard.htm">Admin</a></li>
+                <li><a href="contact.htm">Help?</a></li>
+                <!-- <li><a href="order-list.htm">Orders</a></li>
+                <li><a href="admin-dashboard.htm">Admin</a></li> -->
             </ul>
             <div class="user-controls">
                 <button id="login-btn" class="btn btn-text" onclick="openModal('login-modal')" style="display: flex">
@@ -184,19 +188,23 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number" data-target="500">0</div>
+                    <i class="fa-solid fa-smile"></i>
+                    <div class="stat-number" data-target="500" data-suffix="+">0</div>
                     <div class="stat-label">Happy Customers</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" data-target="30">0</div>
+                    <i class="fa-solid fa-utensils"></i>
+                    <div class="stat-number" data-target="30" data-suffix="+">0</div>
                     <div class="stat-label">Menu Items</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" data-target="98">0</div>
+                    <i class="fa-regular fa-star"></i>
+                    <div class="stat-number" data-target="98" data-suffix="%">0</div>
                     <div class="stat-label">Satisfaction Rate</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" data-target="3">0</div>
+                    <i class="fa-solid fa-calendar"></i>
+                    <div class="stat-number" data-target="3" data-suffix="yrs">0</div>
                     <div class="stat-label">Years of Service</div>
                 </div>
             </div>
@@ -328,7 +336,7 @@
                 </li>
                 <li>
                     <a href="" target="_blank" aria-label="TikTok">
-                        <i class="fab fa-tiktok"></i> @yourhandle
+                        <i class="fab fa-tiktok"></i> @sidedishfoods
                     </a>
                 </li>
             </ul>

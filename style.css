@@ -632,6 +632,12 @@ a{color:var(--accent);text-decoration:none}
   line-height: 1.6;
 }
 
+/**Stat Controls**/
+.stat-item i{
+    font-size: 40px;
+    color: var(--accent-primary);
+    margin-bottom: 8px;
+}
 /* Menu Item Controls */
 .menu-card-controls {
   display: flex;
@@ -711,17 +717,27 @@ a{color:var(--accent);text-decoration:none}
   border-radius: var(--radius);
   font-weight: 500;
 }
-.section{max-width:1100px;margin:28px auto;padding:0 20px}
-h2{font-family:'Georgia',serif;color:var(--accent);font-size:30px;margin-bottom:12px}
+.section{
+  max-width:1100px;
+  margin:28px auto;
+  padding:0 20px
+}
+h2{
+  font-family:'Georgia',serif;
+  color:var(--accent);
+  font-size:30px;
+  margin-bottom:12px
+}
 .featured-classes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 .card h3{margin-top:10px;margin-bottom:8px}
 .card p{color:var(--muted);margin:0}
 
 .site-footer {
+  box-sizing: border-box;
   background: #111;
   color: #eee;
-  padding: 20px 40px;
+  padding: 10px 10px 20px 20px;
   font-family: 'Electrolize', sans-serif;
 }
 
@@ -744,9 +760,7 @@ h2{font-family:'Georgia',serif;color:var(--accent);font-size:30px;margin-bottom:
   margin: 0;
 }
 
-.acknowledge-me a{
-    font-size: 14px;
-}
+
 
 .footer-center .social-links a {
   color: #eee;
@@ -763,9 +777,19 @@ h2{font-family:'Georgia',serif;color:var(--accent);font-size:30px;margin-bottom:
 }
 
 .footer-right .acknowledge-me a {
-  color: #f5f5f5;
+  color: gray;
   text-decoration: none;
   transition: color 0.3s ease;
+}
+
+.footer-right{
+  display: flex;
+  padding-bottom: 0;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  width: 100%;
+  font-size: 13px;
+  justify-content: flex-end;
 }
 
 .footer-right .acknowledge-me a:hover {
@@ -925,6 +949,9 @@ footer i {
 
 
 /* Contact Page */
+.contact-section {
+  padding: 15px 0 0px 0px;
+}
 .contact-form label {
   display: block;
   margin-top: 12px;
@@ -945,6 +972,215 @@ footer i {
 .contact-form .btn {
   margin-top: 16px;
 }
+
+/* =========================
+   Help / Contact page enhancements
+   ========================= */
+
+.help-hero {
+  padding: 48px 20px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  margin: 24px auto;
+  max-width: var(--container);
+  text-align: center;
+}
+
+.help-hero h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.help-hero p {
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Help grid layout: form + FAQs */
+.help-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+  max-width: var(--container);
+  margin: 10px auto;
+}
+
+/* Card consistency */
+.help-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem;
+}
+
+.help-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+/* Form enhancements */
+.help-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.help-form label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.help-form select,
+.help-form input[type="text"],
+.help-form input[type="email"],
+.help-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.help-form select:focus,
+.help-form input:focus,
+.help-form textarea:focus {
+  border-color: var(--accent-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 198, 170, 0.4); /* accent-tertiary glow */
+}
+
+.help-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.help-form .actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Contact info card */
+.contact-info {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.contact-info .info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+}
+
+.contact-info .info-row i {
+  color: var(--accent-primary);
+}
+
+/* FAQ container card */
+.faq {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+/* Each item */
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+/* Hidden checkbox for pure CSS toggle */
+.faq-toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Question label styled as a button */
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 0.875rem 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.faq-question:hover {
+  color: var(--accent-primary);
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+}
+
+/* Icon: leading ❓ and trailing chevron via pseudo elements */
+.faq-question::before {
+  content: "❓";
+  margin-right: 8px;
+  color: var(--accent-primary);
+  font-size: 1rem;
+}
+
+.faq-question::after {
+  content: "\25BC"; /* down chevron */
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast);
+}
+
+/* Answer area: animated height + fade */
+.faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.25s ease;
+  padding: 0 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Toggle: when checked, reveal answer and rotate chevron */
+.faq-toggle:checked + .faq-question + .faq-answer {
+  max-height: 300px; /* enough for typical answers */
+  opacity: 1;
+  transform: translateY(0);
+  padding-bottom: 0.75rem;
+}
+
+.faq-toggle:checked + .faq-question::after {
+  transform: rotate(180deg);
+}
+
+/* FAQ section title spacing */
+.faq-title {
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+/* Responsive for Help page */
+@media (max-width: 768px) {
+  .help-grid { grid-template-columns: 1fr; }
+  .help-form .form-row { grid-template-columns: 1fr; }
+}
+
 
 /* Cart */
 .cart-overlay {
@@ -1226,7 +1462,7 @@ footer i {
   border-radius: 50%;
 }
 
-/* Responsive Design */
+/* Responsive Design
 @media (max-width: 1200px) {
   .container {
     max-width: 960px;
@@ -1281,8 +1517,164 @@ footer i {
     flex-direction: column;
     gap: 1rem;
   }
+} */
+
+/* =========================
+   Responsive media block
+   ========================= */
+
+/* Base container scaling */
+@media (max-width: 1200px) {
+  .container { max-width: 960px; }
 }
-        
+
+@media (max-width: 992px) {
+  .container { max-width: 720px; }
+
+  /* Navbar spacing & nav links */
+  .navbar .container { padding: 0 16px; }
+  .nav-links { gap: 1rem; font-size: 18px; }
+  .tagline { font-size: 1.4rem; }
+}
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .container { max-width: 540px; }
+
+  /* Typography scale-down */
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+
+  /* Hero responsiveness */
+  .hero { min-height: 360px; padding: 20px; }
+  .hero-content { max-width: 100%; padding: 20px; height: auto; }
+  .hero h1 { margin-top: 40px; font-size: 42px; }
+  .hero-content p { font-size: 1.125rem; }
+
+  /* Categories grid (home) */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  /* Offers carousel controls */
+  .offers-wrapper { position: relative; }
+  .nav-btn.prev, .nav-btn.next {
+    width: 36px; height: 36px; display: grid; place-items: center;
+  }
+
+  /* Menu and cards grid */
+  .menu-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .menu-card-image { height: 180px; }
+  .menu-card-content { padding: 1rem; }
+
+  /* Generic grid utility adjustments */
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: unset; }
+  .grid img { min-width: unset; width: 100%; height: 200px; object-fit: cover; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  .stat-item { text-align: center; }
+
+  /* Steps grid */
+  .how-it-works .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  /* Testimonials grid */
+  .testimonials .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  /* Newsletter */
+  .newsletter .container { text-align: center; }
+  .newsletter-form { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  .newsletter-input { width: 100%; }
+
+  /* Footer layout stacking */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .footer-center .social-links { justify-content: center; }
+}
+
+/* Mobile (≤576px) */
+@media (max-width: 576px) {
+  /* Navbar: tighter spacing */
+  .navbar .container { gap: 0.75rem; }
+  .tagline { display: none; } /* saves space on tiny screens */
+  .nav-links { gap: 0.75rem; font-size: 16px; }
+
+  /* Turn featured grids into single column */
+  .grid, .menu-grid,
+  .testimonials .testimonial-grid,
+  .how-it-works .steps-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Card paddings */
+  .card { padding: 1rem; }
+
+  /* Hero headline */
+  .hero h1 { font-size: 34px; margin-top: 24px; }
+  .hero-content p { font-size: 1rem; }
+
+  /* Tabs (menu page) become wrap stack */
+  .tabs { padding: 10px; }
+  .tabs button {
+    margin: 6px 6px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  /* Menu sections grid min width */
+  .menu-section.active { grid-template-columns: 1fr; }
+
+  /* Cart overlay: full width on mobile */
+  .cart-overlay { max-width: 100%; }
+
+  /* Forms spacing */
+  .form-group { margin-bottom: 1rem; }
+  .form-input { font-size: 0.95rem; }
+
+  /* Footer links stack */
+  .footer-center .social-links { gap: 12px; }
+}
+
+/* Small phones (≤420px) */
+@media (max-width: 420px) {
+  /* Reduce icon sizes in stats */
+  .stat-item i { font-size: 32px; }
+
+  /* Button sizing */
+  .btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
+
+  /* Headings tighter */
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+
+  /* Offer cards content paddings */
+  .offer-card .offer-content { padding: 0.75rem; }
+
+  /* Testimonials avatar sizing */
+  .testimonial-card .testimonial-header img {
+    width: 64px; height: 64px;
+  }
+}
+
         .section {
             padding: 40px 20px;
         }
