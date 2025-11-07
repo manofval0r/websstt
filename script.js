@@ -430,7 +430,11 @@ function updateDeliveryFee() {
   if (total < 10000) {
     if (city === 'Kano') {
       window.deliveryFee = 2400;
-      deliveryFeeElement.textContent = '2,400 NGN';
+      deliveryFeeElement.textContent = window.deliveryFee.toLocaleString('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0
+});
       if (cashOnDeliveryOption) cashOnDeliveryOption.disabled = false;
       if (cardPaymentOption) cardPaymentOption.disabled = true;
     } else {
@@ -453,12 +457,29 @@ function updateDeliveryFee() {
   if (typeof updateGrandTotal === 'function') updateGrandTotal();
 }
 
+function formatNGN(amount) {
+    const numericAmount = Number(amount);
+    if (isNaN(numericAmount) || numericAmount === null) {
+     return '0 NGN';
+    }
+    // Use proper locale 'en-NG' and the currency option
+    return numericAmount.toLocaleString('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 0 // Prevents displaying .00
+    });
+}
+
 function updateGrandTotal(){
   const grandTotal = document.getElementById('grand-total');
   if(!grandTotal) return
   const numericPrice = window.deliveryFee || 0;
   grandNumericTotal = total + numericPrice;
-  grandTotal.textContent = grandNumericTotal.toLocaleString("en-NGN") + " NGN";
+  grandTotal.textContent = grandNumericTotal.toLocaleString('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 0
+    });
 }
 
 function showPaymentDetails(paymentMethod) {

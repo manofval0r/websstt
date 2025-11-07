@@ -140,6 +140,10 @@
                         <!-- Items will be inserted here by JS -->
                     </div>
                     <div class="checkout-totals">
+                        <!-- <div class="totals-row">
+                            <span>Items Count:</span>
+                            <span id="items-count">0 Items</span>
+                        </div> -->
                         <div class="totals-row">
                             <span>Subtotal</span>
                             <span id="order-total">0 NGN</span>
@@ -302,7 +306,7 @@
             </div>
         </div>
     </footer>
-    <script>
+    <!-- <script>
         window.deliveryFee = 0;
 
         window.addEventListener('load', function () {
@@ -313,23 +317,31 @@
                 updateDeliveryFee();
             }
         });
-    </script>
+    </script> -->
     <script src="script.js"></script>
     <script>
-        // Inline JavaScript code that depends on BASE_URL
+        // Access global variables (cart, total) and functions (removeFromCart, updateGrandTotal, updateDeliveryFee) from script.js
+
         window.addEventListener('load', function () {
             try {
+                // 1. Update the Cart Item List and Subtotal
                 updateCheckoutSummary();
-                updateDeliveryFee();
+                // 2. Calculate Delivery Fee and Grand Total (requires function from script.js)
+                if (typeof updateDeliveryFee === 'function') updateDeliveryFee();
             } catch (error) {
                 console.error('Error during window.onload:', error);
             }
         });
+
         function updateCheckoutSummary() {
             console.log('Updating checkout summary...');
             const orderItemsContainer = document.getElementById('order-items');
             const orderTotalElement = document.getElementById('order-total');
+            // VITAL: Now correctly getting the element by its ID
+            const itemsCountElement = document.getElementById('items-count');
 
+            // 1. Calculate and Update Item Count
+            // Reduce the cart array to sum up the 'qty' property of all items
             const count = cart.reduce((s, it) => s + (Number(it.qty) || 1), 0);
             if (itemsCountElement) {
                 itemsCountElement.textContent = `${count} ${count === 1 ? 'Item' : 'Items'}`;
@@ -337,25 +349,48 @@
 
             if (!cart.length) {
                 orderItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-                orderTotalElement.textContent = '0';
+                // Subtotal for empty cart, using robust formatting
+                orderTotalElement.textContent = 0..toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+                if (typeof window.updateGrandTotal === 'function') window.updateGrandTotal();
                 return;
             }
 
+            // 2. Build and Update Cart Items List
             let html = '';
             cart.forEach((item, idx) => {
+                // Price display using correct currency formatting
+                const unitPriceFormatted = Number(item.price).toLocaleString('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 0
+                });
+
                 html += `
                     <div class="checkout-item">
                         <img src="${item.img || 'assets/no-pic.jpg'}" alt="${item.name}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;margin-right:10px;">
-                        <strong>${item.name}</strong>
-                        <div>${(item.price).toLocaleString('en-NG')} NGN x ${item.qty}</div>
+                        <div style="flex: 1;">
+                            <strong>${item.name}</strong>
+                            <div>${unitPriceFormatted} x ${item.qty}</div>
+                        </div>
                         <button class="btn btn-text" onclick="removeFromCart(${idx})" aria-label="Remove item">Remove</button>
                     </div>
                 `;
             });
 
             orderItemsContainer.innerHTML = html;
-            orderTotalElement.textContent = total.toLocaleString('en-NG');
-            if (typeof updateGrandTotal === 'function') updateGrandTotal();
+
+            // 3. Update Subtotal (order-total)
+            orderTotalElement.textContent = total.toLocaleString('en-NG', {
+                style: 'currency',
+                currency: 'NGN',
+                minimumFractionDigits: 0
+            });
+
+            // 4. Trigger Grand Total Update (since subtotal just changed)
+            // This ensures the final total reflects the new subtotal.
+            if (typeof window.updateGrandTotal === 'function') {
+                window.updateGrandTotal();
+            }
         }
     </script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
