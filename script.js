@@ -259,11 +259,6 @@ function renderGoogleButtons() {
 }
 
 
-// These are no longer needed for client-side GSI
-// function signInWithGoogle() { }
-// function signUpWithGoogle() { }
-// function parseOAuthReturn() { } // This function is for backend redirects, not client-side GSI
-
 // ===============================
 // Cart functions (existing)
 // ===============================
@@ -281,12 +276,65 @@ function addToCart(name, price, qty = 1, img) {
     img: img || ''
   };
 
+  
   cart.push(item);
   total += item.price * item.qty;
   localStorage.setItem('cart', JSON.stringify(cart));
   localStorage.setItem('total', total);
+  showToast(name, qty, price);
+
+  const cartIcon = document.getElementById('cart-toggle');
+  if (cartIcon) {
+    cartIcon.classList.add('cart-jiggle');
+    setTimeout(() => cartIcon.classList.remove('cart-jiggle'), 500); // Remove after animation
+  }
 
   updateCartSummary();
+}
+
+// Toast Notification
+function showToast(name, qty, price) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+
+  // Calculate total for this item
+  const itemTotal = (Number(qty) * Number(price)).toLocaleString('en-NG');
+  const qtyText = Number(qty) === 1 ? '1 piece' : `${qty} pieces`;
+  toast.innerHTML = `
+    <i class="fa-solid fa-check-circle"></i>
+    <div class="toast-content">
+        <p>Added to cart!</p>
+        <span>${qtyText} of ${name} (NGN ${itemTotal})</span>
+        
+        <a href="checkout.htm" class="toast-action">
+            View Cart & Checkout
+        </a>
+    </div>
+  `;
+
+  // Add toast to the container
+  container.appendChild(toast);
+
+  // --- Animate in ---
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 10);
+
+  // --- Animate out and remove ---
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    
+    // Remove the element from the DOM after the fade-out (500ms)
+    setTimeout(() => {
+      if (container.contains(toast)) {
+          container.removeChild(toast);
+      }
+    }, 500); // Must match the CSS transition duration
+  }, 3000); 
 }
 
 function addToCartFromCard(button) {
@@ -364,18 +412,24 @@ function updateDeliveryFee() {
   const cashOnDeliveryOption = document.getElementById('cash-on-delivery');
   const cardPaymentOption = document.getElementById('card-payment');
 
-  if (!deliveryFeeElement || !deliveryOption) return;
+  window.deliveryFee = 0;
+  if (!deliveryFeeElement || !deliveryOption){
+    if (typeof updateGrandTotal === 'function') updateGrandTotal(); 
+    return;
+  }
 
   if (deliveryOption === 'pickup') {
     deliveryFeeElement.textContent = '0 NGN (In-restaurant pickup)';
     if (cashOnDeliveryOption) cashOnDeliveryOption.disabled = true;
     if (cardPaymentOption) cardPaymentOption.disabled = false;
+    if(typeof updateGrandTotal === 'function') updateGrandTotal();
     return;
   }
 
   // Assuming total is in NGN, adjust thresholds as needed
   if (total < 10000) {
     if (city === 'Kano') {
+      window.deliveryFee = 2400;
       deliveryFeeElement.textContent = '2,400 NGN';
       if (cashOnDeliveryOption) cashOnDeliveryOption.disabled = false;
       if (cardPaymentOption) cardPaymentOption.disabled = true;
@@ -386,6 +440,7 @@ function updateDeliveryFee() {
     }
   } else {
     if (city === 'Kano') {
+      window.deliveryFee = 2400;
       deliveryFeeElement.textContent = '2,400 NGN';
       if (cashOnDeliveryOption) cashOnDeliveryOption.disabled = false;
       if (cardPaymentOption) cardPaymentOption.disabled = true;
@@ -395,6 +450,15 @@ function updateDeliveryFee() {
       if (cardPaymentOption) cardPaymentOption.disabled = true;
     }
   }
+  if (typeof updateGrandTotal === 'function') updateGrandTotal();
+}
+
+function updateGrandTotal(){
+  const grandTotal = document.getElementById('grand-total');
+  if(!grandTotal) return
+  const numericPrice = window.deliveryFee || 0;
+  grandNumericTotal = total + numericPrice;
+  grandTotal.textContent = grandNumericTotal.toLocaleString("en-NGN") + " NGN";
 }
 
 function showPaymentDetails(paymentMethod) {
@@ -495,6 +559,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartSummary();
   console.log('Page loaded');
 
+  if (!document.getElementById('toast-container')) {
+    const toastContainer = document.createElement('div');
+    toastContainer.id = 'toast-container';
+    document.body.appendChild(toastContainer);
+  }
+
   // Load and render Google buttons
   renderGoogleButtons();
 });
@@ -513,3 +583,5 @@ function handleNewsletterSubmit(event) {
   }
 }
 window.handleNewsletterSubmit = handleNewsletterSubmit; // Expose to global
+window.updateGrandTotal = updateGrandTotal;
+window.submitOrder = submitOrder;

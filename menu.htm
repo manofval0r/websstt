@@ -79,12 +79,9 @@
                     </div>
                     <!-- Removed the old button with onclick="signInWithGoogle()" as GSI handles it -->
             </div>
-            <p class="switch-auth">
-                Don’t have an account? <a href="#" onclick="switchToSignup()">Sign Up</a>
-            </p>
             </form>
+            <p class="switch-form">Don't have an account? <a href="#" onclick="switchToSignup(event)">Sign Up</a></p>
         </div>
-    </div>
     </div>
 
     <!-- Signup Modal -->
@@ -119,12 +116,11 @@
                             data-text="sign_up_with" data-shape="rectangular" data-logo_alignment="left"
                             data-width="300px">
                         </div>
-                        <!-- Removed the old button with onclick="signUpWithGoogle()" as GSI handles it -->
                     </div>
-                    <p class="switch-auth">
-                        Already have an account? <a href="#" onclick="switchToLogin()">Sign In</a>
-                    </p>
                 </form>
+
+                <p class="switch-form">Already have an account? <a href="#" onclick="switchToLogin(event)">Sign In</a>
+                </p>
             </div>
         </div>
     </div>
@@ -662,5 +658,6 @@
         window.onload = updateCart;
     </script>
 </body>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </html>

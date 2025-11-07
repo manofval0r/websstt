@@ -409,27 +409,5 @@
 <script src="home.js"></script>
 <!-- The GSI script is here. It will automatically find the divs with class="g_id_signin" -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-    // This script block should also be updated or removed as updateCartSummary() is now called from script.js
-    document.addEventListener('DOMContentLoaded', () => {
-        // This existing block is now redundant, as updateCartSummary is called by script.js's DOMContentLoaded
-        // Keeping it for reference to show it's no longer needed here.
-        /*
-        try {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartCountElement = document.getElementById('cart-count');
-            const cartBadgeElement = document.getElementById('cart-toggle'); // Corrected element reference
-
-            if (cartCountElement && cartBadgeElement) {
-                const count = cart.reduce((sum, item) => sum + item.qty, 0); // Sum quantities
-                cartCountElement.textContent = count;
-                cartBadgeElement.setAttribute('data-count', count);
-            }
-        } catch (e) {
-            console.error('Error initializing cart count:', e);
-        }
-        */
-    });
-</script>
 
 </html>
