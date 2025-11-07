@@ -829,16 +829,16 @@ footer i {
   .header nav{display:none}
 }
 /* Checkout specific */
-.checkout-section{max-width:900px;margin:0 auto}
-.order-summary .card, .delivery-details .card{padding:12px}
+.checkout-summary .card, .delivery-details .card{padding:12px}
 .error-message{color:#c32;display:none}
 /* Checkout Page */
 .checkout-section {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
-.order-summary h3, .delivery-details h3, .payment-method h3 {
+
+.checkout-summary h3, .delivery-details h3, .payment-method h3 {
   font-family: 'Playfair Display', serif;
   color: var(--accent);
   margin-bottom: 16px;
@@ -878,7 +878,7 @@ footer i {
   flex-wrap: wrap;
   align-items: center;
   gap: 40px;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 .about-text {
@@ -1482,68 +1482,7 @@ footer i {
   border-radius: 50%;
 }
 
-/* Responsive Design
-@media (max-width: 1200px) {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@media (max-width: 992px) {
-  .container {
-    max-width: 720px;
-  }
-  
-  .grid-4 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    max-width: 540px;
-  }
-  
-  .grid-3, .grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.75rem; }
-}
-
-@media (max-width: 576px) {
-  .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr;
-  }
-  
-  .header-nav {
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
-    background: var(--bg-secondary);
-    padding: 1rem;
-    transform: translateY(-100%);
-    transition: transform var(--transition);
-  }
-  
-  .header-nav.active {
-    transform: translateY(0);
-  }
-  
-  .nav {
-    flex-direction: column;
-    gap: 1rem;
-  }
-} */
-
-/* =========================
-   Responsive media block
-   ========================= */
-
-/* Base container scaling */
+/* Responsive media block */
 @media (max-width: 1200px) {
   .container { max-width: 960px; }
 }
