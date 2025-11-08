@@ -1686,40 +1686,6 @@ footer i {
         padding-right: 1rem;
     }
 
-  /* Menu sections grid min width */
-  .menu-section.active {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        padding: 0.75rem;
-    }
-
-  .menu-card-content {
-        padding: 0.75rem; /* Reduced padding inside the card */
-    }
-    .menu-card-header {
-        gap: 0.5rem; /* Tighter gap between title and price */
-        margin-bottom: 0.5rem;
-    }
-    .menu-card-title {
-        font-size: 0.9rem; /* Smaller title font */
-        line-height: 1.2;
-    }
-    .menu-card-price {
-        font-size: 0.9rem; /* Smaller price font */
-    }
-    .menu-card-description {
-        font-size: 0.75rem; /* Smaller description */
-        margin-bottom: 0.75rem;
-    }
-    .menu-card-controls {
-        flex-direction: column; /* Stack controls vertically */
-        align-items: stretch; /* Make button full width */
-        gap: 0.5rem;
-    }
-    .add-to-cart-btn {
-        padding: 0.5rem; /* Standardize button padding */
-    }
-
   /* Stats grid */
   .stats-grid {
     display: grid;
@@ -1759,7 +1725,10 @@ footer i {
 /* Mobile (≤576px) */
 @media (max-width: 576px) {
   /* Navbar: tighter spacing */
-  .navbar .container { gap: 0.75rem; }
+  .navbar{
+    height: 50px;
+    position:sticky;
+  }
   .tagline { display: none; } /* saves space on tiny screens */
   .nav-links { gap: 0.75rem; font-size: 16px; }
 
@@ -1779,7 +1748,7 @@ footer i {
   .hero-content p { font-size: 1rem; }
 
   /* Tabs (menu page) become wrap stack */
-  .tabs { padding: 10px; }
+  .tabs { padding: 10px !important; margin-top: 0 !important; }
   .tabs button {
     margin: 6px 6px;
     padding: 8px 16px;
@@ -1788,17 +1757,38 @@ footer i {
 
   /* Menu sections grid min width */
   .menu-section.active {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        padding: 0.75rem;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px;
+        padding: 0.75rem !important;
     }
 
+  .menu-card{
+    display:flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+  /* .menu-card-image-wrapper {
+    width: 120px
+  } */
+  .menu-card-image-wrapper img{
+    transform: translateX(-65px);
+  }
   .menu-card-content {
-        padding: 0.75rem; /* Reduced padding inside the card */
+    flex:1;
+      padding: 0.25rem !important; /* Reduced padding inside the card */
+
     }
     .menu-card-header {
         gap: 0.5rem; /* Tighter gap between title and price */
         margin-bottom: 0.5rem;
+    }
+    .menu-card-content h4{
+      display: block;
+      width:100%;
+      font-size: 1rem; 
+    }
+    .sidedish-menu{
+      padding: 0 !important;
     }
     .menu-card-title {
         font-size: 0.9rem; /* Smaller title font */
@@ -1812,9 +1802,10 @@ footer i {
         margin-bottom: 0.75rem;
     }
     .menu-card-controls {
-        flex-direction: column; /* Stack controls vertically */
-        align-items: stretch; /* Make button full width */
+        display:flex;  
+        justify-content: space-evenly;
         gap: 0.5rem;
+        margin-top:auto;  
     }
     .add-to-cart-btn {
         padding: 0.5rem; /* Standardize button padding */
