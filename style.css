@@ -1599,7 +1599,7 @@ footer i {
   h3 { font-size: 1.5rem; }
 
   .navbar {
-    max-width: 100px;
+    max-width: 100%;
   }
 
   /* Hero responsiveness */
@@ -1613,6 +1613,7 @@ footer i {
     width: 100% !important;
   }
 
+  
   /* Categories grid (home) */
   .categories-grid {
     display: grid;
@@ -1630,10 +1631,94 @@ footer i {
   .menu-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
   .menu-card-image { height: 180px; }
   .menu-card-content { padding: 1rem; }
-
+  
   /* Generic grid utility adjustments */
   .grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: unset; }
-  .grid img { min-width: unset; width: 100%; height: 200px; object-fit: cover; }
+  .grid img{
+  min-width: 340px;
+  min-height: 200px;
+  max-height: 270px;
+  border-radius: 10px;
+}
+  /* .grid img { min-width: unset; width: 100%; height: 200px; object-fit: cover; } */
+  /* 1. Ensure the container doesn't overflow the screen, but hides the scroll content */
+    .special-offers-section .container {
+        padding: 0; /* Remove horizontal padding from the main container */
+        overflow-x: hidden;
+    }
+
+    .offer-card{
+      max-width: 250px;
+    }
+
+
+    .offer-image{
+      display:none;
+    }
+    .offer-badge{
+      transform: translateY(100px) translateX(13px) rotate(-35deg);
+    }
+
+    /* 2. Target the offers container for horizontal scrolling */
+    .offers-container { 
+        /* The container holding the cards */
+        display: flex; 
+        flex-wrap: nowrap; /* CRITICAL: Forces cards into a single row */
+        overflow-x: scroll; /* CRITICAL: Enables horizontal swiping/scrolling */
+        -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+        scroll-snap-type: x mandatory; /* Makes it snap cleanly to each card */
+        gap: 1.5rem; /* Space between cards */
+        padding: 1rem 1rem 1rem 1rem; /* Reintroduce some vertical padding and space on the ends */
+    }
+
+    /* 3. Target the individual cards/items to set their mobile width */
+    .menu-card { /* Assuming you use .menu-card for the items */
+        /* Set width to a fixed percentage of the viewport width (e.g., 85%) */
+        flex: 0 0 85vw; /* CRITICAL: Prevents stretching/shrinking and sets width */
+        max-width: 85vw; 
+        scroll-snap-align: start; /* Makes the card snap to the left edge */
+    }
+
+    /* Optional: Fix padding/margins on other elements if the main container padding was removed */
+    .section-padding,
+    .hero-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+  /* Menu sections grid min width */
+  .menu-section.active {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+  .menu-card-content {
+        padding: 0.75rem; /* Reduced padding inside the card */
+    }
+    .menu-card-header {
+        gap: 0.5rem; /* Tighter gap between title and price */
+        margin-bottom: 0.5rem;
+    }
+    .menu-card-title {
+        font-size: 0.9rem; /* Smaller title font */
+        line-height: 1.2;
+    }
+    .menu-card-price {
+        font-size: 0.9rem; /* Smaller price font */
+    }
+    .menu-card-description {
+        font-size: 0.75rem; /* Smaller description */
+        margin-bottom: 0.75rem;
+    }
+    .menu-card-controls {
+        flex-direction: column; /* Stack controls vertically */
+        align-items: stretch; /* Make button full width */
+        gap: 0.5rem;
+    }
+    .add-to-cart-btn {
+        padding: 0.5rem; /* Standardize button padding */
+    }
 
   /* Stats grid */
   .stats-grid {
