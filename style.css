@@ -1633,7 +1633,7 @@ footer i {
   .menu-card-content { padding: 1rem; }
   
   /* Generic grid utility adjustments */
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: unset; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: .2rem; max-width: unset; }
   .grid img{
   min-width: 340px;
   min-height: 200px;
@@ -1671,15 +1671,12 @@ footer i {
         padding: 1rem 1rem 1rem 1rem; /* Reintroduce some vertical padding and space on the ends */
     }
 
-    /* 3. Target the individual cards/items to set their mobile width */
-    .menu-card { /* Assuming you use .menu-card for the items */
-        /* Set width to a fixed percentage of the viewport width (e.g., 85%) */
+    .menu-card { 
         flex: 0 0 85vw; /* CRITICAL: Prevents stretching/shrinking and sets width */
         max-width: 85vw; 
-        scroll-snap-align: start; /* Makes the card snap to the left edge */
+        scroll-snap-align: start;
     }
 
-    /* Optional: Fix padding/margins on other elements if the main container padding was removed */
     .section-padding,
     .hero-content {
         padding-left: 1rem;
@@ -1726,7 +1723,7 @@ footer i {
 @media (max-width: 576px) {
   /* Navbar: tighter spacing */
   .navbar{
-    height: 50px;
+    height: 40px;
     position:sticky;
   }
   .tagline { display: none; } /* saves space on tiny screens */
@@ -1748,7 +1745,10 @@ footer i {
   .hero-content p { font-size: 1rem; }
 
   /* Tabs (menu page) become wrap stack */
-  .tabs { padding: 10px !important; margin-top: 0 !important; }
+  .tabs { 
+    padding: 10px !important; 
+    top: 40px !important;
+  }
   .tabs button {
     margin: 6px 6px;
     padding: 8px 16px;
@@ -1758,7 +1758,7 @@ footer i {
   /* Menu sections grid min width */
   .menu-section.active {
         grid-template-columns: 1fr 1fr !important;
-        gap: 20px;
+        gap: .7rem !important;
         padding: 0.75rem !important;
     }
 
@@ -2220,6 +2220,7 @@ footer i {
     display: flex;
     justify-content: center;
     background-color: rgba(70, 40, 34, 0.95);
+    opacity: .98;
     padding: 15px;
     box-shadow: var(--shadow);
     backdrop-filter: blur(8px);
