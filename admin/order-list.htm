@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order List - Sidedish Foods</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
 </head>
+
 <body>
     <div class="header">
-        <img src="assets/logo.jpg" alt="Sidedish Foods Logo">
+        <img src="../assets/logo.jpg" alt="Sidedish Foods Logo">
         <nav>
             <a href="index.htm">Home</a>
             <a href="menu.htm">Menu</a>
@@ -30,7 +34,8 @@
     <div class="section order-list-section" id="order-list-section" style="display: none;">
         <h2>Your Orders</h2>
         <div class="search-section">
-            <input type="text" id="search-input" placeholder="Search by ID, address, state, payment method, delivery option, or items">
+            <input type="text" id="search-input"
+                placeholder="Search by ID, address, state, payment method, delivery option, or items">
         </div>
         <div class="filter-section">
             <label>Filter by Payment Status:</label>
@@ -66,24 +71,19 @@
         window.BASE_URL = window.BASE_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://sidedish-backend.onrender.com');
 
 
-        // Hardcoded credentials (for demonstration purposes)
-        const VALID_EMAIL = "ayshaahmad360@gmail.com";       
-        const VALID_PASSCODE = "dishesatheside_staff";
-
-        function login() {
-            const email = document.getElementById('email').value;
-            const passcode = document.getElementById('passcode').value;
-            const loginError = document.getElementById('login-error');
-
-            if (email === VALID_EMAIL && passcode === VALID_PASSCODE) {
+        // Hardcoded credentials removed — now uses token-based auth
+        // Require auth — redirect to login page if token missing
+        (function requireAuth() {
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = 'admin-login.htm';
+            } else {
+                // Token exists, show order list directly
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('order-list-section').style.display = 'block';
                 fetchOrders();
-            } else {
-                loginError.style.display = 'block';
             }
-        }
-        document.getElementById('login-btn').addEventListener('click', login);
+        })();
 
 
         // Debounce setup
@@ -125,10 +125,12 @@
             }
 
             try {
+                const token = localStorage.getItem('admin_token');
                 const response = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
                     method: 'DELETE',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
                     }
                 });
 
@@ -152,10 +154,12 @@
 
             try {
                 const newStatus = !currentStatus; // Toggle the status
+                const token = localStorage.getItem('admin_token');
                 const response = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
                     },
                     body: JSON.stringify({ payment_confirmed: newStatus })
                 });
@@ -182,9 +186,11 @@
                 const endDate = document.getElementById('end-date').value;
                 const sortOption = document.getElementById('sort-option').value;
 
+                const token = localStorage.getItem('admin_token');
                 const response = await fetch(`${BASE_URL}/api/orders?search=${searchTerm}&payment=${paymentFilter}&startDate=${startDate}&endDate=${endDate}&sort=${sortOption}`, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
                     }
                 });
 
@@ -195,7 +201,7 @@
 
                     // 1. Filter by search term
                     if (searchTerm) {
-                        orders = orders.filter(order => 
+                        orders = orders.filter(order =>
                             (order.id && order.id.toString().toLowerCase().includes(searchTerm)) ||
                             (order.address && order.address.toLowerCase().includes(searchTerm)) ||
                             (order.state && order.state.toLowerCase().includes(searchTerm)) ||
@@ -207,7 +213,7 @@
 
                     // 2. Filter by payment status
                     if (paymentFilter !== 'all') {
-                        orders = orders.filter(order => 
+                        orders = orders.filter(order =>
                             paymentFilter === 'confirmed' ? order.payment_confirmed : !order.payment_confirmed
                         );
                     }
@@ -283,7 +289,7 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             try {
                 updateCheckoutSummary();
                 updateDeliveryFee();
@@ -293,4 +299,5 @@
         });
     </script>
 </body>
+
 </html>

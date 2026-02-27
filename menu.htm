@@ -41,11 +41,11 @@
                         <i class="fa-solid fa-sign-out-alt"></i>
                     </button>
                 </div>
-                <a href="checkout.htm"><button id="cart-toggle" class="btn btn-text cart-badge" data-count="0"
-                        title="Open cart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span id="cart-count" class="sr-only">0</span>
-                    </button></a>
+                <button id="cart-toggle" class="btn btn-text cart-badge" data-count="0" title="Open cart"
+                    onclick="openCart()" aria-expanded="false" aria-controls="cart-drawer">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-count" class="sr-only">0</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -126,14 +126,38 @@
     </div>
 
     <div class="tabs container">
-        <button class="tab active" onclick="openTab('food')">Food</button>
-        <button class="tab" onclick="openTab('drinks')">Drinks</button>
-        <button class="tab" onclick="openTab('snacks')">Snacks</button>
+        <button class="tab active" onclick="openTab('food', this)">Food</button>
+        <button class="tab" onclick="openTab('drinks', this)">Drinks</button>
+        <button class="tab" onclick="openTab('snacks', this)">Snacks</button>
     </div>
+
+    <!-- Menu Search & Filter -->
+    <div class="menu-filters container">
+        <div class="menu-search-wrapper">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="menu-search" class="menu-search" placeholder="Search dishes..."
+                oninput="filterMenu()">
+            <button class="menu-search-clear" onclick="clearMenuSearch()" aria-label="Clear search">&times;</button>
+        </div>
+        <div class="menu-tags">
+            <button class="menu-tag active" data-tag="all" onclick="filterByTag('all', this)">All</button>
+            <button class="menu-tag" data-tag="popular" onclick="filterByTag('popular', this)"><i
+                    class="fa-solid fa-fire"></i> Popular</button>
+            <button class="menu-tag" data-tag="spicy" onclick="filterByTag('spicy', this)"><i
+                    class="fa-solid fa-pepper-hot"></i> Spicy</button>
+            <button class="menu-tag" data-tag="mild" onclick="filterByTag('mild', this)">Mild</button>
+            <button class="menu-tag" data-tag="vegetarian" onclick="filterByTag('vegetarian', this)"><i
+                    class="fa-solid fa-leaf"></i> Veg</button>
+            <button class="menu-tag" data-tag="new" onclick="filterByTag('new', this)"><i
+                    class="fa-solid fa-sparkles"></i> New</button>
+        </div>
+    </div>
+
     <div class="section sidedish-menu">
         <div id="food" class="menu-section active">
-            <article class="menu-card" data-name="Jollof Rice" data-price="3500" data-img="assets/fried-rice.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Jollof Rice" data-price="3500" data-img="assets/fried-rice.jpg"
+                data-tags="popular,mild">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/fried-rice.jpg" alt="Jollof Rice">
                 </div>
                 <div class="menu-card-content">
@@ -156,8 +180,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="White Rice and Stew" data-price="3000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="White Rice and Stew" data-price="3000" data-img="assets/no-pic.jpg"
+                data-tags="mild">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="White Rice and Stew">
                 </div>
                 <div class="menu-card-content">
@@ -180,8 +205,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Tai Rice" data-price="4000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Tai Rice" data-price="4000" data-img="assets/no-pic.jpg"
+                data-tags="new,mild">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Tai Rice">
                 </div>
                 <div class="menu-card-content">
@@ -204,8 +230,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Birhyani" data-price="3500" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Birhyani" data-price="3500" data-img="assets/no-pic.jpg"
+                data-tags="spicy,popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Birhyani">
                 </div>
                 <div class="menu-card-content">
@@ -228,8 +255,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Beef-on-Stick" data-price="3500" data-img="assets/beef-on-stick.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Beef-on-Stick" data-price="3500" data-img="assets/beef-on-stick.jpg"
+                data-tags="popular,spicy">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/beef-on-stick.jpg" alt="Beef on Stick">
                 </div>
                 <div class="menu-card-content">
@@ -252,8 +280,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Sina Sir" data-price="3000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Sina Sir" data-price="3000" data-img="assets/no-pic.jpg"
+                data-tags="spicy">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Sina Sir">
                 </div>
                 <div class="menu-card-content">
@@ -277,8 +306,8 @@
             </article>
 
             <article class="menu-card" data-name="Marinated Whole Chicken" data-price="8500"
-                data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+                data-img="assets/no-pic.jpg" data-tags="popular,spicy">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Marinated Whole Chicken">
                 </div>
                 <div class="menu-card-content">
@@ -302,8 +331,8 @@
             </article>
 
             <article class="menu-card" data-name="Marinated Local Chicken" data-price="8000"
-                data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+                data-img="assets/no-pic.jpg" data-tags="spicy">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Marinated Local Chicken">
                 </div>
                 <div class="menu-card-content">
@@ -327,8 +356,8 @@
             </article>
 
             <article class="menu-card" data-name="Marinated Chicken Wings" data-price="7000"
-                data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+                data-img="assets/no-pic.jpg" data-tags="spicy,popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Marinated Chicken Wings">
                 </div>
                 <div class="menu-card-content">
@@ -351,8 +380,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Marinated Drumsticks" data-price="7000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Marinated Drumsticks" data-price="7000" data-img="assets/no-pic.jpg"
+                data-tags="popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Marinated Drumsticks">
                 </div>
                 <div class="menu-card-content">
@@ -375,8 +405,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Marinated Thighs" data-price="7000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Marinated Thighs" data-price="7000" data-img="assets/no-pic.jpg"
+                data-tags="popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Marinated Thighs">
                 </div>
                 <div class="menu-card-content">
@@ -400,8 +431,9 @@
             </article>
         </div>
         <div id="drinks" class="menu-section">
-            <article class="menu-card" data-name="Zobo" data-price="500" data-img="assets/zobo.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Zobo" data-price="500" data-img="assets/zobo.jpg"
+                data-tags="popular,vegetarian">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/zobo.jpg" alt="Zobo">
                 </div>
                 <div class="menu-card-content">
@@ -423,8 +455,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Fura da Nono" data-price="400" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Fura da Nono" data-price="400" data-img="assets/no-pic.jpg"
+                data-tags="vegetarian,mild">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Fura da Nono">
                 </div>
                 <div class="menu-card-content">
@@ -446,8 +479,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Kunu Aya" data-price="300" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Kunu Aya" data-price="300" data-img="assets/no-pic.jpg"
+                data-tags="vegetarian,new">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Kunu Aya">
                 </div>
                 <div class="menu-card-content">
@@ -469,8 +503,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Tiger Nut Drink" data-price="500" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Tiger Nut Drink" data-price="500" data-img="assets/no-pic.jpg"
+                data-tags="vegetarian,popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Tiger Nut Drink">
                 </div>
                 <div class="menu-card-content">
@@ -491,8 +526,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Tamarind Drink" data-price="300" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Tamarind Drink" data-price="300" data-img="assets/no-pic.jpg"
+                data-tags="vegetarian,new">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Tamarind Drink">
                 </div>
                 <div class="menu-card-content">
@@ -513,8 +549,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Mocktails" data-price="2000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Mocktails" data-price="2000" data-img="assets/no-pic.jpg"
+                data-tags="new">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Mocktails">
                 </div>
                 <div class="menu-card-content">
@@ -537,9 +574,9 @@
             </article>
         </div>
         <div id="snacks" class="menu-section">
-            <article class="menu-card" data-name="Spring roll(10 pieces)" data-price="4000"
-                data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Spring roll(10 pieces)" data-price="4000" data-img="assets/no-pic.jpg"
+                data-tags="popular,vegetarian">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Spring rolls">
                 </div>
                 <div class="menu-card-content">
@@ -560,8 +597,9 @@
                     </div>
                 </div>
             </article>
-            <article class="menu-card" data-name="Meatpie" data-price="3000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Meatpie" data-price="3000" data-img="assets/no-pic.jpg"
+                data-tags="popular">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Meatpie">
                 </div>
                 <div class="menu-card-content">
@@ -583,8 +621,9 @@
                 </div>
             </article>
 
-            <article class="menu-card" data-name="Cupcake (50 pieces)" data-price="15000" data-img="assets/no-pic.jpg">
-                <div class="menu-card-image-wrapper">
+            <article class="menu-card" data-name="Cupcake (50 pieces)" data-price="15000" data-img="assets/no-pic.jpg"
+                data-tags="new,vegetarian">
+                <div class="menu-card-image-wrapper" onclick="openQuickView(this.closest('.menu-card'))">
                     <img class="menu-card-image" src="assets/no-pic.jpg" alt="Cupcake (50 pieces)">
                 </div>
                 <div class="menu-card-content">
@@ -643,19 +682,214 @@
             </div>
         </div>
     </footer>
+
+    <!-- Cart Drawer Backdrop -->
+    <div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+
+    <!-- Cart Drawer -->
+    <aside id="cart-drawer" class="cart-overlay" aria-label="Shopping cart">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Your Cart</h3>
+            <button class="cart-close" onclick="closeCart()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Subtotal:</span>
+                <span id="cart-total">0 NGN</span>
+            </div>
+            <a href="checkout.htm" class="cart-checkout">Proceed to Checkout</a>
+        </div>
+    </aside>
+
+    <!-- Sticky Checkout Bar -->
+    <div id="sticky-checkout-bar" class="sticky-checkout-bar">
+        <div class="sticky-checkout-info">
+            <span class="sticky-checkout-count">0 items</span>
+            <span class="sticky-checkout-total">₦0</span>
+        </div>
+        <a href="checkout.htm" class="sticky-checkout-btn">
+            <i class="fa-solid fa-shopping-bag"></i> Checkout
+        </a>
+    </div>
+
+    <!-- Quick View Drawer Backdrop -->
+    <div id="quick-view-backdrop" class="cart-backdrop" onclick="closeQuickView()"></div>
+
+    <!-- Quick View Drawer -->
+    <aside id="quick-view-drawer" class="quick-view-drawer" aria-label="Quick view">
+        <button class="qv-close" onclick="closeQuickView()" aria-label="Close quick view">&times;</button>
+        <div class="qv-image-wrapper">
+            <img id="qv-img" src="assets/no-pic.jpg" alt="Item preview">
+        </div>
+        <div class="qv-content">
+            <h3 id="qv-title">Item Name</h3>
+            <div id="qv-tags" class="qv-tags"></div>
+            <p id="qv-desc" class="qv-description"></p>
+            <div class="qv-price" id="qv-price">₦0</div>
+            <div class="qv-controls">
+                <div class="qv-qty-controls">
+                    <button class="quantity-btn" onclick="changeQvQty(-1)" aria-label="Decrease">-</button>
+                    <input type="number" id="qv-qty" class="quantity-input" value="1" min="1" max="99">
+                    <button class="quantity-btn" onclick="changeQvQty(1)" aria-label="Increase">+</button>
+                </div>
+                <button class="btn btn-primary qv-add-btn" onclick="addToCartFromQuickView()">
+                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                </button>
+            </div>
+        </div>
+    </aside>
+
     <script src="script.js"></script>
     <script>
-        function openTab(tabName) {
-            var tabs = document.getElementsByClassName('tab');
-            var sections = document.getElementsByClassName('menu-section');
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-                sections[i].classList.remove('active');
-            }
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        // ===============================
+        // Tab Switching
+        // ===============================
+        function openTab(tabName, btn) {
+            document.querySelectorAll('.tabs .tab').forEach(function (tab) {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-section').forEach(function (sec) {
+                sec.classList.remove('active');
+            });
+            var section = document.getElementById(tabName);
+            if (section) section.classList.add('active');
+            if (btn) btn.classList.add('active');
         }
-        window.onload = updateCart;
+
+        // ===============================
+        // Menu Search & Filter
+        // ===============================
+        let currentTag = 'all';
+
+        function filterMenu() {
+            const searchTerm = document.getElementById('menu-search').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.menu-card');
+
+            cards.forEach(function (card) {
+                const name = (card.dataset.name || card.querySelector('.menu-card-title')?.textContent || '').toLowerCase();
+                const desc = (card.querySelector('.menu-card-description')?.textContent || '').toLowerCase();
+                const tags = (card.dataset.tags || '').toLowerCase();
+
+                const matchesSearch = !searchTerm || name.includes(searchTerm) || desc.includes(searchTerm) || tags.includes(searchTerm);
+                const matchesTag = currentTag === 'all' || tags.includes(currentTag);
+
+                card.style.display = (matchesSearch && matchesTag) ? '' : 'none';
+            });
+
+            // Show/hide clear button
+            const clearBtn = document.querySelector('.menu-search-clear');
+            if (clearBtn) clearBtn.style.opacity = searchTerm ? '1' : '0';
+        }
+
+        function filterByTag(tag, btn) {
+            currentTag = tag;
+            // Update active tag button
+            document.querySelectorAll('.menu-tag').forEach(function (t) {
+                t.classList.remove('active');
+            });
+            if (btn) btn.classList.add('active');
+            filterMenu();
+        }
+
+        function clearMenuSearch() {
+            const input = document.getElementById('menu-search');
+            if (input) input.value = '';
+            filterMenu();
+        }
+
+        // ===============================
+        // Quick View Drawer
+        // ===============================
+        function openQuickView(card) {
+            const drawer = document.getElementById('quick-view-drawer');
+            const backdrop = document.getElementById('quick-view-backdrop');
+            if (!drawer || !card) return;
+
+            // Populate drawer content
+            const name = card.dataset.name || card.querySelector('.menu-card-title')?.textContent || 'Item';
+            const price = card.dataset.price || '0';
+            const img = card.dataset.img || card.querySelector('.menu-card-image')?.src || 'assets/no-pic.jpg';
+            const desc = card.querySelector('.menu-card-description')?.textContent || '';
+            const tags = (card.dataset.tags || '').split(',').filter(Boolean);
+
+            document.getElementById('qv-img').src = img;
+            document.getElementById('qv-img').alt = name;
+            document.getElementById('qv-title').textContent = name;
+            document.getElementById('qv-price').textContent = Number(price).toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+            document.getElementById('qv-desc').textContent = desc;
+            document.getElementById('qv-qty').value = 1;
+
+            // Render tags
+            const tagsContainer = document.getElementById('qv-tags');
+            tagsContainer.innerHTML = tags.map(function (t) {
+                return '<span class="qv-tag">' + t.trim() + '</span>';
+            }).join('');
+
+            // Store card reference for add-to-cart
+            drawer.dataset.cardRef = Array.from(document.querySelectorAll('.menu-card')).indexOf(card);
+
+            drawer.classList.add('active');
+            if (backdrop) backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Focus close button
+            const closeBtn = drawer.querySelector('.qv-close');
+            if (closeBtn) closeBtn.focus();
+        }
+
+        function closeQuickView() {
+            const drawer = document.getElementById('quick-view-drawer');
+            const backdrop = document.getElementById('quick-view-backdrop');
+            if (drawer) drawer.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function changeQvQty(delta) {
+            const input = document.getElementById('qv-qty');
+            if (!input) return;
+            let val = Number(input.value) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            if (val > 99) val = 99;
+            input.value = val;
+        }
+
+        function addToCartFromQuickView() {
+            const drawer = document.getElementById('quick-view-drawer');
+            const cardIndex = Number(drawer?.dataset.cardRef);
+            const cards = document.querySelectorAll('.menu-card');
+            const card = cards[cardIndex];
+            if (!card) { closeQuickView(); return; }
+
+            const name = card.dataset.name || card.querySelector('.menu-card-title')?.textContent;
+            const price = Number(card.dataset.price) || 0;
+            const img = card.dataset.img || card.querySelector('.menu-card-image')?.src || '';
+            const qty = Number(document.getElementById('qv-qty')?.value) || 1;
+
+            if (typeof addToCart === 'function') {
+                addToCart(name, price, qty, img);
+            }
+            closeQuickView();
+        }
+
+        // ESC to close quick view
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const drawer = document.getElementById('quick-view-drawer');
+                if (drawer && drawer.classList.contains('active')) {
+                    closeQuickView();
+                }
+            }
+        });
+
+        // ===============================
+        // Init
+        // ===============================
+        window.addEventListener('load', function () {
+            if (typeof updateCartSummary === 'function') updateCartSummary();
+            if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar();
+        });
     </script>
 </body>
 <script src="https://accounts.google.com/gsi/client" async defer></script>

@@ -205,57 +205,40 @@ async function handleGoogleCredentialResponse(response) {
 }
 
 // Function to render Google buttons with custom callbacks (since GSI is for client-side)
+let gsiInitialized = false;
+
 function renderGoogleButtons() {
   if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-      console.warn('Google Identity Services library not loaded yet.');
-      return;
+    return;
   }
 
   const googleClientId = document.querySelector('meta[name="google-signin-client_id"]')?.content;
   if (!googleClientId) {
-      console.error('Google Client ID not found in meta tag.');
-      return;
+    console.error('Google Client ID not found in meta tag.');
+    return;
   }
 
-  // Initialize GSI for pop-up or redirect flow
-  google.accounts.id.initialize({
-    client_id: googleClientId,
-    callback: handleGoogleCredentialResponse,
+  if (!gsiInitialized) {
+    google.accounts.id.initialize({
+      client_id: googleClientId,
+      callback: handleGoogleCredentialResponse,
+    });
+    gsiInitialized = true;
+  }
+
+  document.querySelectorAll('.g_id_signin').forEach((buttonEl) => {
+    if (buttonEl.dataset.gsiRendered === 'true') return;
+    google.accounts.id.renderButton(buttonEl, {
+      type: 'standard',
+      size: 'large',
+      text: buttonEl.dataset.text || 'continue_with',
+      shape: 'rectangular',
+      theme: 'outline',
+      logo_alignment: 'left',
+      width: 300
+    });
+    buttonEl.dataset.gsiRendered = 'true';
   });
-
-  // Render the "Sign in with Google" button for the login modal
-  const loginGoogleBtn = document.getElementById('login-modal').querySelector('.btn-google');
-  if (loginGoogleBtn) {
-    google.accounts.id.renderButton(loginGoogleBtn, {
-      type: 'standard', // or 'icon'
-      size: 'large',
-      text: 'continue_with', // 'signin_with', 'signup_with', 'continue_with', 'federated_signin'
-      shape: 'rectangular',
-      theme: 'outline',
-      logo_alignment: 'left',
-      width: '300px' // Adjust width as needed
-    });
-    // Attach an event listener if the renderButton isn't automatically showing it
-    // Or, remove the existing button and let renderButton create a new one.
-    // For now, let's just make sure the `google.accounts.id.prompt()` is called
-    // which handles the UX directly from Google's JS library.
-    loginGoogleBtn.onclick = () => google.accounts.id.prompt();
-  }
-
-  // Render the "Sign up with Google" button for the signup modal
-  const signupGoogleBtn = document.getElementById('signup-modal').querySelector('.btn-google');
-  if (signupGoogleBtn) {
-    google.accounts.id.renderButton(signupGoogleBtn, {
-      type: 'standard', // or 'icon'
-      size: 'large',
-      text: 'continue_with',
-      shape: 'rectangular',
-      theme: 'outline',
-      logo_alignment: 'left',
-      width: '300px'
-    });
-    signupGoogleBtn.onclick = () => google.accounts.id.prompt();
-  }
 }
 
 
@@ -377,18 +360,25 @@ function updateCartSummary() {
   const cartItems = document.getElementById('cart-items');
   const cartTotal = document.getElementById('cart-total');
   if (cartItems && cartTotal) {
-    cartItems.innerHTML = cart.map((item, i) => `
-      <div class="cart-item">
-        <img src="${item.img || 'assets/no-pic.jpg'}" class="cart-item-img" alt="${item.name}">
-        <div class="cart-item-details">
-          <div class="cart-item-title">${item.name}</div>
-          <div class="cart-item-price">${(item.price).toLocaleString('en-NG')} NGN x ${item.qty}</div>
+    if (cart.length === 0) {
+      cartItems.innerHTML = '<div class="cart-empty"><i class="fa-solid fa-cart-shopping" style="font-size:2rem;margin-bottom:1rem;opacity:0.5;"></i><p>Your cart is empty</p><a href="menu.htm" class="btn btn-primary" style="margin-top:1rem;">Browse Menu</a></div>';
+    } else {
+      cartItems.innerHTML = cart.map((item, i) => `
+        <div class="cart-item">
+          <img src="${item.img || 'assets/no-pic.jpg'}" class="cart-item-img" alt="${item.name}">
+          <div class="cart-item-details">
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-price">${(item.price).toLocaleString('en-NG')} NGN</div>
+          </div>
+          <div class="cart-item-qty-controls">
+            <button class="cart-qty-btn" onclick="updateCartItemQty(${i}, -1)" aria-label="Decrease quantity">−</button>
+            <span class="cart-item-qty">${item.qty}</span>
+            <button class="cart-qty-btn" onclick="updateCartItemQty(${i}, 1)" aria-label="Increase quantity">+</button>
+          </div>
+          <button onclick="removeFromCart(${i})" class="cart-item-remove" aria-label="Remove item"><i class="fa-solid fa-trash"></i></button>
         </div>
-        <div class="cart-item-quantity">
-          <button onclick="removeFromCart(${i})" class="cart-item-remove" aria-label="Remove">&times;</button>
-        </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
     cartTotal.textContent = total.toLocaleString('en-NG');
   }
 
@@ -400,6 +390,9 @@ function updateCartSummary() {
 
   localStorage.setItem('cart', JSON.stringify(cart));
   localStorage.setItem('total', total);
+
+  // Update sticky checkout bar if present
+  if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar();
 }
 
 // ===============================
@@ -472,9 +465,9 @@ function formatNGN(amount) {
 
 function updateGrandTotal(){
   const grandTotal = document.getElementById('grand-total');
-  if(!grandTotal) return
+  if(!grandTotal) return;
   const numericPrice = window.deliveryFee || 0;
-  grandNumericTotal = total + numericPrice;
+  const grandNumericTotal = total + numericPrice;
   grandTotal.textContent = grandNumericTotal.toLocaleString('en-NG', {
         style: 'currency',
         currency: 'NGN',
@@ -567,6 +560,82 @@ window.submitOrder = submitOrder;
 
 window.switchToSignup = switchToSignup;
 window.switchToLogin = switchToLogin;
+
+// ===============================
+// Cart Drawer Functions
+// ===============================
+function openCart() {
+  const drawer = document.getElementById('cart-drawer');
+  const backdrop = document.getElementById('cart-backdrop');
+  const toggle = document.getElementById('cart-toggle');
+  if (drawer) drawer.classList.add('active');
+  if (backdrop) backdrop.classList.add('active');
+  if (toggle) toggle.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden'; // Prevent background scroll
+  // Focus the close button for accessibility
+  const closeBtn = drawer?.querySelector('.cart-close');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeCart() {
+  const drawer = document.getElementById('cart-drawer');
+  const backdrop = document.getElementById('cart-backdrop');
+  const toggle = document.getElementById('cart-toggle');
+  if (drawer) drawer.classList.remove('active');
+  if (backdrop) backdrop.classList.remove('active');
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+// Close cart on ESC key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const drawer = document.getElementById('cart-drawer');
+    if (drawer && drawer.classList.contains('active')) {
+      closeCart();
+    }
+  }
+});
+
+// Update cart item quantity directly in drawer
+function updateCartItemQty(index, delta) {
+  if (index < 0 || index >= cart.length) return;
+  const item = cart[index];
+  const oldQty = Number(item.qty) || 1;
+  let newQty = oldQty + delta;
+  if (newQty < 1) newQty = 1;
+  if (newQty > 99) newQty = 99;
+  // Update total
+  total -= item.price * oldQty;
+  item.qty = newQty;
+  total += item.price * newQty;
+  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('total', total);
+  updateCartSummary();
+  if (typeof updateCheckoutSummary === 'function') updateCheckoutSummary();
+  updateStickyCheckoutBar();
+}
+
+// Update sticky checkout bar (if it exists)
+function updateStickyCheckoutBar() {
+  const bar = document.getElementById('sticky-checkout-bar');
+  if (!bar) return;
+  const count = cart.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+  if (count > 0) {
+    bar.classList.add('visible');
+    const countEl = bar.querySelector('.sticky-checkout-count');
+    const totalEl = bar.querySelector('.sticky-checkout-total');
+    if (countEl) countEl.textContent = `${count} item${count !== 1 ? 's' : ''}`;
+    if (totalEl) totalEl.textContent = total.toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+window.openCart = openCart;
+window.closeCart = closeCart;
+window.updateCartItemQty = updateCartItemQty;
+window.updateStickyCheckoutBar = updateStickyCheckoutBar;
 
 
 // ===============================

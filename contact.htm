@@ -37,11 +37,11 @@
                         <i class="fa-solid fa-sign-out-alt"></i>
                     </button>
                 </div>
-                <a href="checkout.htm"><button id="cart-toggle" class="btn btn-text cart-badge" data-count="0"
-                        title="Open cart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span id="cart-count" class="sr-only">0</span>
-                    </button></a>
+                <button id="cart-toggle" class="btn btn-text cart-badge" data-count="0" title="Open cart"
+                    onclick="openCart()" aria-expanded="false" aria-controls="cart-drawer">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-count" class="sr-only">0</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -247,6 +247,26 @@
         </p>
     </div>
 </footer>
+
+<!-- Cart Drawer Backdrop -->
+<div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+
+<!-- Cart Drawer -->
+<aside id="cart-drawer" class="cart-overlay" aria-label="Shopping cart">
+    <div class="cart-header">
+        <h3><i class="fa-solid fa-cart-shopping"></i> Your Cart</h3>
+        <button class="cart-close" onclick="closeCart()" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Subtotal:</span>
+            <span id="cart-total">0 NGN</span>
+        </div>
+        <a href="checkout.htm" class="cart-checkout">Proceed to Checkout</a>
+    </div>
+</aside>
+
 <script src="script.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
